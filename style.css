@@ -80,6 +80,31 @@ nav ul li a:hover {
 .active {
   display: block;
 }
+#slider button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+}
+
+#slider #prev {
+  left: 10px;
+}
+
+#slider #next {
+  right: 10px;
+}
+
+#slider button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
 
 /* About Section */
 #about {

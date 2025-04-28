@@ -65,3 +65,37 @@ function getPriceCollection(sizeId) {
     }
     return price;
 }
+// Slider functionality
+let slides = document.querySelectorAll(".slide");
+let currentSlide = 0;
+let slideInterval = setInterval(nextSlide, 1500); // Slide every 1.5 seconds
+
+function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove("active"));
+    slides[index].classList.add("active");
+}
+
+function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+}
+
+function prevSlide() {
+    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+    showSlide(currentSlide);
+}
+
+document.getElementById("next").addEventListener("click", () => {
+    nextSlide();
+    resetInterval();
+});
+
+document.getElementById("prev").addEventListener("click", () => {
+    prevSlide();
+    resetInterval();
+});
+
+function resetInterval() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(nextSlide, 1500);
+}
