@@ -42,7 +42,7 @@ function showToast(message) {
 function buyNow() {
     let itemsInCart = cart.map(item => `${item.name} (Size: ${item.size}) x ${item.quantity}`).join(", ");
     let total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
-    window.location.href = `https://wa.me/9103436363?text=I want to buy: ${itemsInCart}. Total: ₹${total}`;
+    window.location.href = `https://wa.me/919103436363?text=I want to buy: ${itemsInCart}. Total: ₹${total}`;
 }
 
 // Function to get price based on size selected (in Collection section)
