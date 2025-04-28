@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chocoluxe by Iram</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loading"></div>
+
+    <header>
+        <h1>Chocoluxe by Iram</h1>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#specials">Special Editions</a></li>
+                <li><a href="#cart">Cart</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="slider">
+        <div class="slide active">
+            <img src="/images/slide 1.JPG" alt="Handcrafted Chocolates">
+        </div>
+        <div class="slide">
+            <img src="/images/slide 2.JPG" alt="Luxury Chocolate Boxes">
+        </div>
+        <div class="slide">
+            <img src="/images/sslide 3.JPG" alt="Limited Edition Treats">
+        </div>
+    </section>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>Handmade with love, our artisan chocolates bring luxury and passion together. Every piece is a masterpiece crafted with premium ingredients.</p>
+    </section>
+
+    <section id="products">
+      <h2>Our Collection</h2>
+      <div class="product-grid">
+          <!-- Product 1 -->
+          <div class="product">
+              <img src="/images/single.JPG" alt="Rose Gold Truffle">
+              <h3>Rose Gold Truffle</h3>
+              <p>₹499 (Small), ₹749 (Medium), ₹1380 (Large)</p>
+              <select id="size1">
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="large">Large</option>
+              </select>
+              <input type="number" id="quantity1" value="1" min="1" />
+              <button onclick="addToCart('Rose Gold Truffle', getPriceCollection('size1'), document.getElementById('quantity1').value)">Add to Cart</button>
+          </div>
+          
+          <!-- Product 2 -->
+          <div class="product">
+              <img src="/images/medium.JPG" alt="Peach Delight">
+              <h3>Peach Delight</h3>
+              <p>₹499 (Small), ₹749 (Medium), ₹1380 (Large)</p>
+              <select id="size2">
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="large">Large</option>
+              </select>
+              <input type="number" id="quantity2" value="1" min="1" />
+              <button onclick="addToCart('Peach Delight', getPriceCollection('size2'), document.getElementById('quantity2').value)">Add to Cart</button>
+          </div>
+          
+          <!-- Product 3 -->
+          <div class="product">
+              <img src="/images/large.JPG" alt="Golden Bites">
+              <h3>Golden Bites</h3>
+              <p>₹499 (Small), ₹749 (Medium), ₹1380 (Large)</p>
+              <select id="size3">
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="large">Large</option>
+              </select>
+              <input type="number" id="quantity3" value="1" min="1" />
+              <button onclick="addToCart('Golden Bites', getPriceCollection('size3'), document.getElementById('quantity3').value)">Add to Cart</button>
+          </div>
+      </div>
+  </section>
+  
+
+    <section id="specials">
+      <h2>Limited Edition Treats</h2>
+      <p>Exclusive luxury packs available only this season. Grab yours now!</p>
+      
+      <!-- Product Cards for Special Editions -->
+      <div class="special-edition-grid">
+          <!-- Section 1: Dark Chocolate Delights -->
+          <div class="special-edition-item">
+              <img src="/images/spl1.JPG" alt="Dark Chocolate Delights">
+              <h3>Dark Chocolate Delights</h3>
+              <select id="dark-chocolate-size">
+                  <option value="499">Small (₹499)</option>
+                  <option value="749">Medium (₹749)</option>
+                  <option value="1380">Large (₹1380)</option>
+              </select>
+              <label for="dark-chocolate-quantity">Quantity:</label>
+              <input type="number" id="dark-chocolate-quantity" value="1" min="1">
+              <button onclick="addToCart('Dark Chocolate Delights', document.getElementById('dark-chocolate-size').value, document.getElementById('dark-chocolate-quantity').value)">Add to Cart</button>
+          </div>
+          
+          <!-- Section 2: Caramelized Hazelnuts -->
+          <div class="special-edition-item">
+              <img src="/images/spl2.JPG" alt="Caramelized Hazelnuts">
+              <h3>Caramelized Hazelnuts</h3>
+              <select id="caramel-hazelnuts-size">
+                  <option value="499">Small (₹499)</option>
+                  <option value="749">Medium (₹749)</option>
+                  <option value="1380">Large (₹1380)</option>
+              </select>
+              <label for="caramel-hazelnuts-quantity">Quantity:</label>
+              <input type="number" id="caramel-hazelnuts-quantity" value="1" min="1">
+              <button onclick="addToCart('Caramelized Hazelnuts', document.getElementById('caramel-hazelnuts-size').value, document.getElementById('caramel-hazelnuts-quantity').value)">Add to Cart</button>
+          </div>
+  
+          <!-- Section 3: Gold Dusted Truffles -->
+          <div class="special-edition-item">
+              <img src="/images/spl 3.JPG" alt="Gold Dusted Truffles">
+              <h3>Gold Dusted Truffles</h3>
+              <select id="gold-dusted-truffles-size">
+                  <option value="499">Small (₹499)</option>
+                  <option value="749">Medium (₹749)</option>
+                  <option value="1380">Large (₹1380)</option>
+              </select>
+              <label for="gold-dusted-truffles-quantity">Quantity:</label>
+              <input type="number" id="gold-dusted-truffles-quantity" value="1" min="1">
+              <button onclick="addToCart('Gold Dusted Truffles', document.getElementById('gold-dusted-truffles-size').value, document.getElementById('gold-dusted-truffles-quantity').value)">Add to Cart</button>
+          </div>
+  
+          <!-- Section 4: Chocolate Trio Box -->
+          <div class="special-edition-item">
+              <img src="/images/spl 4.JPG" alt="Chocolate Trio Box">
+              <h3>Chocolate Trio Box</h3>
+              <select id="chocolate-trio-size">
+                  <option value="499">Small (₹499)</option>
+                  <option value="749">Medium (₹749)</option>
+                  <option value="1380">Large (₹1380)</option>
+              </select>
+              <label for="chocolate-trio-quantity">Quantity:</label>
+              <input type="number" id="chocolate-trio-quantity" value="1" min="1">
+              <button onclick="addToCart('Chocolate Trio Box', document.getElementById('chocolate-trio-size').value, document.getElementById('chocolate-trio-quantity').value)">Add to Cart</button>
+          </div>
+      </div>
+  </section>
+  
+
+    <section id="cart">
+        <h2>Your Cart</h2>
+        <div id="cart-items"></div>
+        <h3 id="total"></h3>
+        <button onclick="buyNow()" id="buy-btn" style="display:none;">Buy Now</button>
+    </section>
+
+    <footer id="contact">
+        <p>© 2025 Artisan Chocolates | Handmade with love</p>
+        <p>Follow us on <a href="#">Instagram</a> | <a href="#">Facebook</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
