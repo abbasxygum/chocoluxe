@@ -212,12 +212,18 @@ function processCashfreePayment(customerData) {
 }
 
 function initiateeCashfreePayment(orderData) {
-    // This is a demo implementation - in production, you'd call your backend
-    // which would create a Cashfree order and return payment session details
+    // Check if production Cashfree integration is available
+    if (window.CashfreePayment && window.CashfreeConfig.credentials.appId !== 'YOUR_CASHFREE_APP_ID') {
+        // Use production Cashfree integration
+        const cashfree = new window.CashfreePayment();
+        cashfree.initializePayment(orderData);
+        return;
+    }
     
+    // Demo implementation for development/testing
     showToast('Redirecting to payment gateway...');
     
-    // Demo Cashfree integration
+    // Demo Cashfree integration - simulates payment flow
     const cashfreeConfig = {
         mode: "sandbox", // Change to "production" for live
         components: ["order-details", "card", "netbanking", "app", "upi"],
@@ -236,7 +242,8 @@ function initiateeCashfreePayment(orderData) {
     setTimeout(() => {
         handlePaymentSuccess({
             paymentSessionId: 'demo_' + Date.now(),
-            orderId: orderData.orderId
+            orderId: orderData.orderId,
+            paymentMode: 'demo'
         }, orderData);
     }, 2000);
 }
