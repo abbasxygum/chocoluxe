@@ -18,15 +18,22 @@
     <div id="loading"></div>
 
     <header>
-        <h1>Chocoluxe by Iram</h1>
-        <nav>
-            <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#products">Products</a></li>
-                <li><a href="#specials">Special Editions</a></li>
-                <li><a href="#cart">Cart</a></li>
-            </ul>
-        </nav>
+        <div class="header-container">
+            <h1>Chocoluxe by Iram</h1>
+            <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#specials">Special Editions</a></li>
+                    <li><a href="#cart" id="cart-nav">Cart <span id="cart-count">0</span></a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <section id="slider">
@@ -59,13 +66,17 @@
               <img src="Pictures/83F17655-3427-4781-9564-94A5ED6C29C8.jpg" alt="Floral Artisian Chocolates">
               <h3>Floral Artisian Chocolates</h3>
               <p>₹499 (Small), ₹749 (Medium), ₹1380 (Large)</p>
-              <select id="size1">
-                  <option value="small">Small</option>
-                  <option value="medium">Medium</option>
-                  <option value="large">Large</option>
-              </select>
-              <input type="number" id="quantity1" value="1" min="1" />
-              <button onclick="addToCart('Floral Artisian Chocolates', getPriceCollection('size1'), document.getElementById('quantity1').value)">Add to Cart</button>
+              <div class="product-controls">
+                  <div class="product-options">
+                      <select id="size1">
+                          <option value="small">Small</option>
+                          <option value="medium">Medium</option>
+                          <option value="large">Large</option>
+                      </select>
+                      <input type="number" id="quantity1" value="1" min="1" max="10" />
+                  </div>
+                  <button class="add-to-cart-btn" onclick="addToCart('Floral Artisian Chocolates', getPriceCollection('size1'), document.getElementById('quantity1').value)">Add to Cart</button>
+              </div>
           </div>
           
           <!-- Product 2 -->
@@ -73,13 +84,17 @@
               <img src="Pictures/84B74416-EDF1-4056-973C-02667F74312B.jpg" alt="Dry Fruit Artisian Chocolates">
               <h3>Dry Fruit Artisian Chocolates</h3>
               <p>₹499 (Small), ₹749 (Medium), ₹1380 (Large)</p>
-              <select id="size2">
-                  <option value="small">Small</option>
-                  <option value="medium">Medium</option>
-                  <option value="large">Large</option>
-              </select>
-              <input type="number" id="quantity2" value="1" min="1" />
-              <button onclick="addToCart('Dry Fruit Artisian Chocolates', getPriceCollection('size2'), document.getElementById('quantity2').value)">Add to Cart</button>
+              <div class="product-controls">
+                  <div class="product-options">
+                      <select id="size2">
+                          <option value="small">Small</option>
+                          <option value="medium">Medium</option>
+                          <option value="large">Large</option>
+                      </select>
+                      <input type="number" id="quantity2" value="1" min="1" max="10" />
+                  </div>
+                  <button class="add-to-cart-btn" onclick="addToCart('Dry Fruit Artisian Chocolates', getPriceCollection('size2'), document.getElementById('quantity2').value)">Add to Cart</button>
+              </div>
           </div>
           
           <!-- Product 3 -->
@@ -87,13 +102,17 @@
               <img src="Pictures/8678FCA6-81D7-443F-BBD6-16A9BF6698CC.jpg" alt="Floral+Dry Fruit Artisian Chocolate">
               <h3>Floral+Dry Fruit Artisian Chocolate</h3>
               <p>₹499 (Small), ₹749 (Medium), ₹1380 (Large)</p>
-              <select id="size3">
-                  <option value="small">Small</option>
-                  <option value="medium">Medium</option>
-                  <option value="large">Large</option>
-              </select>
-              <input type="number" id="quantity3" value="1" min="1" />
-              <button onclick="addToCart('Floral+Dry Fruit Artisian Chocolate', getPriceCollection('size3'), document.getElementById('quantity3').value)">Add to Cart</button>
+              <div class="product-controls">
+                  <div class="product-options">
+                      <select id="size3">
+                          <option value="small">Small</option>
+                          <option value="medium">Medium</option>
+                          <option value="large">Large</option>
+                      </select>
+                      <input type="number" id="quantity3" value="1" min="1" max="10" />
+                  </div>
+                  <button class="add-to-cart-btn" onclick="addToCart('Floral+Dry Fruit Artisian Chocolate', getPriceCollection('size3'), document.getElementById('quantity3').value)">Add to Cart</button>
+              </div>
           </div>
       </div>
   </section>
@@ -109,66 +128,89 @@
           <div class="special-edition-item">
               <img src="Pictures/single pinata.jpg" alt="Mono Beauty of Pinata">
               <h3>Mono Beauty of Pinata</h3>
-              <select id="Mono-Beauty-of-Pinata-size">
-                  <option value="499">Small (₹499)</option>
-                  <option value="749">Medium (₹749)</option>
-                  <option value="1380">Large (₹1380)</option>
-              </select>
-              <label for="Mono-Beauty-of-Pinata-quantity">Quantity:</label>
-              <input type="number" id="Mono-Beauty-of-Pinata-quantity" value="1" min="1">
-              <button onclick="addToCart('Mono Beauty of Pinata', document.getElementById('Mono-Beauty-of-Pinata-size').value, document.getElementById('Mono-Beauty-of-Pinata-quantity').value)">Add to Cart</button>
+              <div class="product-controls">
+                  <div class="product-options">
+                      <select id="Mono-Beauty-of-Pinata-size">
+                          <option value="499">Small (₹499)</option>
+                          <option value="749">Medium (₹749)</option>
+                          <option value="1380">Large (₹1380)</option>
+                      </select>
+                      <input type="number" id="Mono-Beauty-of-Pinata-quantity" value="1" min="1" max="10">
+                  </div>
+                  <button class="add-to-cart-btn" onclick="addToCart('Mono Beauty of Pinata', document.getElementById('Mono-Beauty-of-Pinata-size').value, document.getElementById('Mono-Beauty-of-Pinata-quantity').value)">Add to Cart</button>
+              </div>
           </div>
           
           <!-- Section 2: Caramelized Hazelnuts -->
           <div class="special-edition-item">
               <img src="Pictures/9D8EFE05-2BBE-4260-A890-63E8A812FCD3.jpg" alt="Tetraluxe Truffles">
               <h3>Tetraluxe Truffles</h3>
-              <select id="Tetraluxe-Truffles-size">
-                  <option value="499">Small (₹499)</option>
-                  <option value="749">Medium (₹749)</option>
-                  <option value="1380">Large (₹1380)</option>
-              </select>
-              <label for="Tetraluxe-Truffles-quantity">Quantity:</label>
-              <input type="number" id="Tetraluxe-Truffles-quantity" value="1" min="1">
-              <button onclick="addToCart('Tetraluxe Truffles', document.getElementById('Tetraluxe-Truffles-size').value, document.getElementById('Tetraluxe-Truffles-quantity').value)">Add to Cart</button>
+              <div class="product-controls">
+                  <div class="product-options">
+                      <select id="Tetraluxe-Truffles-size">
+                          <option value="499">Small (₹499)</option>
+                          <option value="749">Medium (₹749)</option>
+                          <option value="1380">Large (₹1380)</option>
+                      </select>
+                      <input type="number" id="Tetraluxe-Truffles-quantity" value="1" min="1" max="10">
+                  </div>
+                  <button class="add-to-cart-btn" onclick="addToCart('Tetraluxe Truffles', document.getElementById('Tetraluxe-Truffles-size').value, document.getElementById('Tetraluxe-Truffles-quantity').value)">Add to Cart</button>
+              </div>
           </div>
   
           <!-- Section 3: Gold Dusted Truffles -->
           <div class="special-edition-item">
               <img src="Pictures/IMG_0853.jpg" alt="Gold Dusted Truffles">
               <h3>Gold Dusted Truffles</h3>
-              <select id="gold-dusted-truffles-size">
-                  <option value="499">Small (₹499)</option>
-                  <option value="749">Medium (₹749)</option>
-                  <option value="1380">Large (₹1380)</option>
-              </select>
-              <label for="gold-dusted-truffles-quantity">Quantity:</label>
-              <input type="number" id="gold-dusted-truffles-quantity" value="1" min="1">
-              <button onclick="addToCart('Gold Dusted Truffles', document.getElementById('gold-dusted-truffles-size').value, document.getElementById('gold-dusted-truffles-quantity').value)">Add to Cart</button>
+              <div class="product-controls">
+                  <div class="product-options">
+                      <select id="gold-dusted-truffles-size">
+                          <option value="499">Small (₹499)</option>
+                          <option value="749">Medium (₹749)</option>
+                          <option value="1380">Large (₹1380)</option>
+                      </select>
+                      <input type="number" id="gold-dusted-truffles-quantity" value="1" min="1" max="10">
+                  </div>
+                  <button class="add-to-cart-btn" onclick="addToCart('Gold Dusted Truffles', document.getElementById('gold-dusted-truffles-size').value, document.getElementById('gold-dusted-truffles-quantity').value)">Add to Cart</button>
+              </div>
           </div>
   
           <!-- Section 4: Chocolate Trio Box -->
           <div class="special-edition-item">
               <img src="Pictures/CA6F6DAD-209B-456E-9B2F-50E69C4BFBE2.jpg" alt="Chocolate Trio Box">
               <h3>Chocolate Trio Box</h3>
-              <select id="chocolate-trio-size">
-                  <option value="499">Small (₹499)</option>
-                  <option value="749">Medium (₹749)</option>
-                  <option value="1380">Large (₹1380)</option>
-              </select>
-              <label for="chocolate-trio-quantity">Quantity:</label>
-              <input type="number" id="chocolate-trio-quantity" value="1" min="1">
-              <button onclick="addToCart('Chocolate Trio Box', document.getElementById('chocolate-trio-size').value, document.getElementById('chocolate-trio-quantity').value)">Add to Cart</button>
+              <div class="product-controls">
+                  <div class="product-options">
+                      <select id="chocolate-trio-size">
+                          <option value="499">Small (₹499)</option>
+                          <option value="749">Medium (₹749)</option>
+                          <option value="1380">Large (₹1380)</option>
+                      </select>
+                      <input type="number" id="chocolate-trio-quantity" value="1" min="1" max="10">
+                  </div>
+                  <button class="add-to-cart-btn" onclick="addToCart('Chocolate Trio Box', document.getElementById('chocolate-trio-size').value, document.getElementById('chocolate-trio-quantity').value)">Add to Cart</button>
+              </div>
           </div>
       </div>
   </section>
   
 
     <section id="cart">
-        <h2>Your Cart</h2>
-        <div id="cart-items"></div>
-        <h3 id="total"></h3>
-        <button onclick="buyNow()" id="buy-btn" style="display:none;">Buy Now</button>
+        <div class="cart-container">
+            <h2>Your Cart</h2>
+            <div id="cart-items" class="cart-items"></div>
+            <div id="cart-summary" class="cart-summary">
+                <h3 id="total">Total: ₹0</h3>
+                <div class="cart-actions">
+                    <button onclick="clearCart()" id="clear-btn" class="clear-cart-btn" style="display:none;">Clear Cart</button>
+                    <button onclick="proceedToCheckout()" id="buy-btn" class="checkout-btn" style="display:none;">Proceed to Checkout</button>
+                </div>
+            </div>
+            <div id="empty-cart" class="empty-cart">
+                <p>Your cart is empty</p>
+                <a href="#products" class="continue-shopping">Continue Shopping</a>
+            </div>
+        </div>
     </section>
 
     <footer id="contact">
