@@ -213,6 +213,76 @@
         </div>
     </section>
 
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Checkout</h2>
+                <span class="close" onclick="closeCheckoutModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="checkout-step-1" class="checkout-step active">
+                    <h3>Customer Information</h3>
+                    <form id="customer-form">
+                        <div class="form-group">
+                            <label for="customer-name">Full Name *</label>
+                            <input type="text" id="customer-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-email">Email *</label>
+                            <input type="email" id="customer-email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-phone">Phone Number *</label>
+                            <input type="tel" id="customer-phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-address">Delivery Address *</label>
+                            <textarea id="customer-address" name="address" required rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-city">City *</label>
+                            <input type="text" id="customer-city" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-pincode">Pincode *</label>
+                            <input type="text" id="customer-pincode" name="pincode" required pattern="[0-9]{6}">
+                        </div>
+                        <div class="form-group">
+                            <label for="special-instructions">Special Instructions (Optional)</label>
+                            <textarea id="special-instructions" name="instructions" rows="2"></textarea>
+                        </div>
+                        <button type="button" onclick="proceedToPayment()" class="next-btn">Continue to Payment</button>
+                    </form>
+                </div>
+                
+                <div id="checkout-step-2" class="checkout-step">
+                    <h3>Order Summary</h3>
+                    <div id="order-summary"></div>
+                    <div class="payment-section">
+                        <h3>Payment</h3>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="payment-method" value="online" checked>
+                                <span>Pay Online (Secure)</span>
+                                <small>Cards, UPI, Net Banking, Wallets</small>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment-method" value="cod">
+                                <span>Cash on Delivery</span>
+                                <small>Pay when you receive your order</small>
+                            </label>
+                        </div>
+                        <div class="checkout-actions">
+                            <button type="button" onclick="goBackToInfo()" class="back-btn">Back</button>
+                            <button type="button" onclick="processPayment()" class="pay-btn">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer id="contact">
         <p>© 2025 Artisan Chocolates | Handmade with love</p>
         <p>Follow us on <a href="https://www.instagram.com/chocoluxe.ig/">Instagram</a> | <a href="#">Facebook</a></p>
