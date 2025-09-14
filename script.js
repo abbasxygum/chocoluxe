@@ -296,6 +296,71 @@ function processCODOrder(customerData) {
     window.open(`https://wa.me/919103436363?text=${encodeURIComponent(message)}`, '_blank');
 }
 
+function processCashfreePayment(customerData) {
+    const total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+    const orderId = generateOrderId();
+    
+    // Cashfree integration
+    initiateeCashfreePayment({
+        orderId: orderId,
+        amount: total,
+        customerData: customerData,
+        items: cart
+    });
+}
+
+function initiateeCashfreePayment(orderData) {
+    // This is a demo implementation - in production, you'd call your backend
+    // which would create a Cashfree order and return payment session details
+    
+    showToast('Redirecting to payment gateway...');
+    
+    // Demo Cashfree integration
+    const cashfreeConfig = {
+        mode: "sandbox", // Change to "production" for live
+        components: ["order-details", "card", "netbanking", "app", "upi"],
+        onSuccess: function(data) {
+            handlePaymentSuccess(data, orderData);
+        },
+        onFailure: function(data) {
+            handlePaymentFailure(data);
+        },
+        onNavigateBack: function(data) {
+            showToast('Payment cancelled');
+        }
+    };
+    
+    // For demo purposes, simulate a successful payment after 2 seconds
+    setTimeout(() => {
+        handlePaymentSuccess({
+            paymentSessionId: 'demo_' + Date.now(),
+            orderId: orderData.orderId
+        }, orderData);
+    }, 2000);
+}
+
+function handlePaymentSuccess(paymentData, orderData) {
+    // Clear cart and close modal
+    cart = [];
+    updateCart();
+    updateCartCount();
+    closeCheckoutModal();
+    
+    // Show success message
+    showToast('Payment successful! Your order has been confirmed.');
+    
+    // Send confirmation to WhatsApp
+    const confirmationMessage = formatOrderConfirmation(orderData, paymentData);
+    setTimeout(() => {
+        window.open(`https://wa.me/919103436363?text=${encodeURIComponent(confirmationMessage)}`, '_blank');
+    }, 1000);
+}
+
+function handlePaymentFailure(data) {
+    showToast('Payment failed. Please try again.');
+    console.error('Payment failed:', data);
+}
+
 function generateOrderId() {
     return 'CHX' + Date.now() + Math.floor(Math.random() * 1000);
 }
