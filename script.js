@@ -1,34 +1,62 @@
 let cart = [];
-
-// Mobile menu functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-    const mainNav = document.getElementById('main-nav');
-    
-    mobileMenuToggle.addEventListener('click', function() {
-        mainNav.classList.toggle('active');
-    });
-    
-    // Close menu when clicking on a nav link
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            mainNav.classList.remove('active');
-        });
-    });
-});
+let pendingCartItem = null;
 
 function addToCart(name, price, quantity, size = 'regular') {
-    let totalPrice = price * quantity;  // Calculate total price for quantity
-    cart.push({ name: name, price: price, quantity: quantity, size: size, totalPrice: totalPrice });
+    pendingCartItem = {
+        name: name,
+        price: price,
+        quantity: quantity,
+        size: size,
+        totalPrice: price * quantity
+    };
+    showCustomizationModal();
+}
+
+function showCustomizationModal() {
+    const modal = document.getElementById('customization-modal');
+    const input = document.getElementById('customization-input');
+    const charCount = document.getElementById('char-count');
+    const confirmBtn = document.getElementById('confirm-customization');
+    
+    input.value = '';
+    charCount.textContent = '0';
+    confirmBtn.disabled = false;
+    
+    modal.style.display = 'block';
+    setTimeout(() => input.focus(), 100);
+}
+
+function hideCustomizationModal() {
+    document.getElementById('customization-modal').style.display = 'none';
+    pendingCartItem = null;
+}
+
+function confirmCustomization() {
+    const input = document.getElementById('customization-input');
+    const customization = input.value.trim();
+    
+    if (customization.length === 0) {
+        alert('Please enter a personalization message.');
+        return;
+    }
+    
+    pendingCartItem.customization = customization;
+    cart.push(pendingCartItem);
     updateCart();
-    updateCartCount();
-    showToast(`${name} added to cart`);
+    showToast(`${pendingCartItem.name} added to cart with personalization: "${customization}"`);
+    hideCustomizationModal();
+    window.location.hash = '#cart';
+    setTimeout(() => {
+        const cartSection = document.getElementById('cart');
+        if (cartSection) {
+            cartSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, 200);
 }
 
 function removeItem(index) {
-    cart.splice(index, 1); // Remove the item from the cart array
-    updateCart(); // Update the cart display and total
+    cart.splice(index, 1);
+    updateCart();
     updateCartCount();
 }
 
@@ -49,6 +77,8 @@ function updateCart() {
     if (cart.length === 0) {
         emptyCart.style.display = "block";
         cartSummary.style.display = "none";
+        let payNowBtn = document.getElementById('pay-now-btn');
+        if (payNowBtn) payNowBtn.style.display = 'none';
         return;
     }
 
@@ -61,11 +91,11 @@ function updateCart() {
         cartItemDiv.className = 'cart-item';
         cartItemDiv.innerHTML = `
             <div class="cart-item-info">
-                <div class="cart-item-name">${item.name}</div>
-                <div class="cart-item-details">Size: ${item.size} | Qty: ${item.quantity}</div>
+                <span class="cart-item-name">${item.name} (Size: ${item.size}) x ${item.quantity}</span><br>
+                <span class="customization-text">✨ "${item.customization}"</span>
             </div>
-            <div class="cart-item-price">₹${item.totalPrice}</div>
-            <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+            <span class="cart-item-price">₹${item.totalPrice}</span>
+            <button class="remove-btn" data-index="${index}">Remove</button>
         `;
         cartItems.appendChild(cartItemDiv);
     });
@@ -73,6 +103,26 @@ function updateCart() {
     document.getElementById("total").innerText = `Total: ₹${total}`;
     document.getElementById("buy-btn").style.display = cart.length ? "inline-block" : "none";
     document.getElementById("clear-btn").style.display = cart.length ? "inline-block" : "none";
+
+    let payNowBtn = document.getElementById('pay-now-btn');
+    if (!payNowBtn) {
+        payNowBtn = document.createElement('button');
+        payNowBtn.id = 'pay-now-btn';
+        payNowBtn.className = 'checkout-btn';
+        payNowBtn.innerText = 'Pay Online';
+        // This button in the cart summary can now use the main checkout flow
+        payNowBtn.onclick = proceedToCheckout; 
+        document.querySelector('.cart-actions').appendChild(payNowBtn);
+    }
+    payNowBtn.style.display = cart.length ? 'inline-block' : 'none';
+
+    const removeBtns = cartItems.querySelectorAll('.remove-btn');
+    removeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const idx = parseInt(btn.getAttribute('data-index'));
+            removeItem(idx);
+        });
+    });
 }
 
 function clearCart() {
@@ -89,31 +139,24 @@ function proceedToCheckout() {
         showToast('Your cart is empty');
         return;
     }
-    
     document.getElementById('checkout-modal').style.display = 'block';
-    document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
+    document.body.style.overflow = 'hidden';
 }
 
 function closeCheckoutModal() {
     document.getElementById('checkout-modal').style.display = 'none';
     document.body.style.overflow = 'auto';
-    // Reset to step 1
     document.getElementById('checkout-step-1').classList.add('active');
     document.getElementById('checkout-step-2').classList.remove('active');
 }
 
 function proceedToPayment() {
-    // Validate customer form
     const form = document.getElementById('customer-form');
     if (!form.checkValidity()) {
         form.reportValidity();
         return;
     }
-    
-    // Generate order summary
     generateOrderSummary();
-    
-    // Move to step 2
     document.getElementById('checkout-step-1').classList.remove('active');
     document.getElementById('checkout-step-2').classList.add('active');
 }
@@ -148,18 +191,79 @@ function generateOrderSummary() {
     orderSummary.innerHTML = html;
 }
 
+// --- MODIFIED SECTION STARTS HERE ---
+
 function processPayment() {
     const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
-    const customerData = getCustomerData();
+    const customerData = getCustomerData(); // You already have this function, it's perfect!
     
-    if (paymentMethod === 'cod') {
-        // Handle Cash on Delivery
-        processCODOrder(customerData);
+    if (paymentMethod === 'online') {
+        // We'll now call a dedicated function for online payments
+        startOnlinePayment(customerData);
     } else {
-        // Handle Online Payment via Cashfree
-        processCashfreePayment(customerData);
+        processCODOrder(customerData);
     }
 }
+
+function startOnlinePayment(customerData) {
+    if (cart.length === 0) {
+        showToast('Your cart is empty');
+        return;
+    }
+
+    showToast('Connecting to our secure payment gateway...');
+
+    // This is the data your server needs
+    const orderPayload = {
+        orderId: generateOrderId(), // Your function to create a unique ID like 'CHX...'
+        orderAmount: cart.reduce((sum, item) => sum + item.totalPrice, 0),
+        orderCurrency: 'INR',
+        customerDetails: {
+            customer_id: 'CUST_' + Date.now(), // Create a unique customer ID
+            customer_name: customerData.name,
+            customer_email: customerData.email,
+            customer_phone: customerData.phone
+        },
+        orderMeta: {
+            // This is just an example. Your server may override this.
+            return_url: `http://127.0.0.1:5500/payment-status.html?order_id={order_id}`, 
+        },
+        items: cart
+    };
+
+    // This fetch call connects to YOUR backend (server.js)
+    fetch('http://localhost:3000/api/create-cashfree-order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderPayload)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.paymentSessionId) {
+            const cashfree = new window.Cashfree();
+            // Redirects the user to Cashfree's checkout page
+            cashfree.checkout({
+                paymentSessionId: data.paymentSessionId,
+                returnUrl: data.return_url, 
+            });
+        } else {
+            throw new Error('Failed to get payment session ID');
+        }
+    })
+    .catch(error => {
+        console.error('Payment initiation failed:', error);
+        showToast('Failed to start payment. Please try again.');
+    });
+}
+
+// --- MODIFIED SECTION ENDS HERE ---
 
 function getCustomerData() {
     return {
@@ -183,84 +287,13 @@ function processCODOrder(customerData) {
         orderId: generateOrderId()
     };
     
-    // For now, send to WhatsApp with detailed order info
     const message = formatOrderForWhatsApp(orderDetails);
-    
-    // Clear cart and close modal
     cart = [];
     updateCart();
     updateCartCount();
     closeCheckoutModal();
-    
     showToast('Order placed successfully! We will contact you soon.');
-    
-    // Send to WhatsApp
     window.open(`https://wa.me/919103436363?text=${encodeURIComponent(message)}`, '_blank');
-}
-
-function processCashfreePayment(customerData) {
-    const total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
-    const orderId = generateOrderId();
-    
-    // Cashfree integration
-    initiateeCashfreePayment({
-        orderId: orderId,
-        amount: total,
-        customerData: customerData,
-        items: cart
-    });
-}
-
-function initiateeCashfreePayment(orderData) {
-    // This is a demo implementation - in production, you'd call your backend
-    // which would create a Cashfree order and return payment session details
-    
-    showToast('Redirecting to payment gateway...');
-    
-    // Demo Cashfree integration
-    const cashfreeConfig = {
-        mode: "sandbox", // Change to "production" for live
-        components: ["order-details", "card", "netbanking", "app", "upi"],
-        onSuccess: function(data) {
-            handlePaymentSuccess(data, orderData);
-        },
-        onFailure: function(data) {
-            handlePaymentFailure(data);
-        },
-        onNavigateBack: function(data) {
-            showToast('Payment cancelled');
-        }
-    };
-    
-    // For demo purposes, simulate a successful payment after 2 seconds
-    setTimeout(() => {
-        handlePaymentSuccess({
-            paymentSessionId: 'demo_' + Date.now(),
-            orderId: orderData.orderId
-        }, orderData);
-    }, 2000);
-}
-
-function handlePaymentSuccess(paymentData, orderData) {
-    // Clear cart and close modal
-    cart = [];
-    updateCart();
-    updateCartCount();
-    closeCheckoutModal();
-    
-    // Show success message
-    showToast('Payment successful! Your order has been confirmed.');
-    
-    // Send confirmation to WhatsApp
-    const confirmationMessage = formatOrderConfirmation(orderData, paymentData);
-    setTimeout(() => {
-        window.open(`https://wa.me/919103436363?text=${encodeURIComponent(confirmationMessage)}`, '_blank');
-    }, 1000);
-}
-
-function handlePaymentFailure(data) {
-    showToast('Payment failed. Please try again.');
-    console.error('Payment failed:', data);
 }
 
 function generateOrderId() {
@@ -282,27 +315,16 @@ function formatOrderForWhatsApp(orderDetails) {
     message += `\n*Order Items:*\n`;
     orderDetails.items.forEach(item => {
         message += `• ${item.name} (${item.size}) x ${item.quantity} = ₹${item.totalPrice}\n`;
+        message += `  Personalization: "${item.customization}"\n`;
     });
     
     message += `\n*Total Amount: ₹${orderDetails.total}*\n`;
-    message += `*Payment Method: ${orderDetails.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}*\n\n`;
-    message += `Please confirm this order and share expected delivery time.`;
+    message += `*Payment Method: ${orderDetails.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment via Cashfree'}*\n\n`;
+    message += `Please confirm this order and share payment details/instructions. Expected delivery time?`;
     
     return message;
 }
 
-function formatOrderConfirmation(orderData, paymentData) {
-    let message = `✅ *Payment Confirmation - ${orderData.orderId}*\n\n`;
-    message += `Payment ID: ${paymentData.paymentSessionId}\n`;
-    message += `Amount Paid: ₹${orderData.amount}\n`;
-    message += `Customer: ${orderData.customerData.name}\n`;
-    message += `Phone: ${orderData.customerData.phone}\n\n`;
-    message += `This order has been paid online successfully. Please process and ship the order.`;
-    
-    return message;
-}
-
-// Close modal when clicking outside
 window.onclick = function(event) {
     const modal = document.getElementById('checkout-modal');
     if (event.target === modal) {
@@ -314,14 +336,41 @@ function showToast(message) {
     let toast = document.createElement('div');
     toast.classList.add('toast');
     toast.innerText = message;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #333;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 5px;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        font-family: Arial, sans-serif;
+        max-width: 300px;
+    `;
+    
     document.body.appendChild(toast);
     setTimeout(() => {
-        toast.remove();
-    }, 3000);
+        if (toast.parentNode) {
+            toast.remove();
+        }
+    }, 4000);
 }
 
+function buyNow() {
+    const missingCustomization = cart.filter(item => !item.customization || item.customization.trim() === '');
+    if (missingCustomization.length > 0) {
+        alert('All items must have personalization messages.');
+        return;
+    }
+    let itemsInCart = cart.map(item => 
+        `${item.name} (Size: ${item.size}) x ${item.quantity} - Personalization: "${item.customization}"`
+    ).join(", ");
+    let total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+    window.location.href = `https://wa.me/919103436363?text=I want to buy: ${itemsInCart}. Total: ₹${total}`;
+}
 
-// Function to get price based on size selected (in Collection section)
 function getPriceCollection(sizeId) {
     let size = document.getElementById(sizeId).value;
     let price = 0;
@@ -336,15 +385,15 @@ function getPriceCollection(sizeId) {
             price = 1380;
             break;
         default:
-            price = 499; // Default to Small size if no selection
+            price = 499;
             break;
     }
     return price;
 }
-// Slider functionality
+
 let slides = document.querySelectorAll(".slide");
 let currentSlide = 0;
-let slideInterval = setInterval(nextSlide, 1500); // Slide every 1.5 seconds
+let slideInterval = setInterval(nextSlide, 1500);
 
 function showSlide(index) {
     slides.forEach(slide => slide.classList.remove("active"));
@@ -375,3 +424,35 @@ function resetInterval() {
     clearInterval(slideInterval);
     slideInterval = setInterval(nextSlide, 1500);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('customization-modal');
+    const input = document.getElementById('customization-input');
+    const charCount = document.getElementById('char-count');
+    const confirmBtn = document.getElementById('confirm-customization');
+    const cancelBtn = document.getElementById('cancel-customization');
+    const closeBtn = document.querySelector('.close-modal');
+    
+    input.addEventListener('input', function() {
+        const length = this.value.length;
+        charCount.textContent = length;
+        confirmBtn.disabled = length === 0;
+        charCount.style.color = length > 12 ? '#ff6584' : '#ff6584';
+    });
+    
+    cancelBtn.addEventListener('click', hideCustomizationModal);
+    closeBtn.addEventListener('click', hideCustomizationModal);
+    confirmBtn.addEventListener('click', confirmCustomization);
+    
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            hideCustomizationModal();
+        }
+    });
+    
+    input.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter' && !confirmBtn.disabled) {
+            confirmCustomization();
+        }
+    });
+});

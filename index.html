@@ -12,6 +12,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="Pictures/apple-touch-icon.png">
 
     <link rel="stylesheet" href="style.css">
+    <!-- Cashfree JS SDK -->
+    <script src="https://sdk.cashfree.com/js/ui/2.0.0/cashfree.js"></script>
 </head>
 <body>
     <!-- Loading Spinner -->
@@ -289,5 +291,27 @@
     </footer>
 
     <script src="script.js"></script>
+    </body>
+
+    <!-- Customization Modal -->
+    <div id="customization-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Personalize Your Chocolates</h2>
+                <span class="close-modal" style="cursor:pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <label for="customization-input">Enter your personalization message (max 50 characters):</label>
+                <input type="text" id="customization-input" maxlength="50" style="width:100%;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <span>Characters: <span id="char-count">0</span>/50</span>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <button id="confirm-customization" class="add-to-cart-btn">Confirm</button>
+                    <button id="cancel-customization" class="clear-cart-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

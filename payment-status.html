@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Status</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        .container { max-width: 600px; margin: auto; }
+        h1 { color: #4CAF50; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Thank You!</h1>
+        <p>Your payment status is being processed. We will notify you shortly.</p>
+        <p>Order ID: <span id="order-id"></span></p>
+        <a href="index.html">Return to Homepage</a>
+    </div>
+    <script>
+        // This script will display the order ID from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('order_id');
+        if (orderId) {
+            document.getElementById('order-id').textContent = orderId;
+        }
+    </script>
+</body>
+</html>
