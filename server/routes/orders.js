@@ -5,8 +5,28 @@ const { authMiddleware, optionalAuth } = require('./middleware/auth');
 
 const router = express.Router();
 
+const MAX_MESSAGE_LENGTH = 50;
+const MAX_NOTE_LENGTH = 500;
+const MAX_QUANTITY = 20;
+
 function generateOrderId() {
   return 'CHX' + Date.now() + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+}
+
+function normalizeItem(item) {
+  const name = String(item.name || '').trim();
+  const price = Math.round(Number(item.price));
+  const quantity = Math.round(Number(item.quantity));
+  const size = String(item.size || '').trim();
+  const message = String(item.message || '').trim().slice(0, MAX_MESSAGE_LENGTH);
+
+  if (!name) return { error: 'Item name is required' };
+  if (!Number.isFinite(price) || price <= 0) return { error: `Invalid price for ${name}` };
+  if (!Number.isFinite(quantity) || quantity < 1 || quantity > MAX_QUANTITY) {
+    return { error: `Invalid quantity for ${name}` };
+  }
+
+  return { value: { name, price, quantity, size, message } };
 }
 
 router.post('/', optionalAuth, (req, res) => {
@@ -23,19 +43,41 @@ router.post('/', optionalAuth, (req, res) => {
       paymentMethod
     } = req.body;
     
-    if (!items || !items.length) {
+    if (!Array.isArray(items) || !items.length) {
       return res.status(400).json({ error: 'Cart is empty' });
     }
-    
+
+    if (items.length > 50) {
+      return res.status(400).json({ error: 'Too many items in cart' });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!customerName || !customerEmail || !customerPhone || !customerAddress || !customerCity || !customerPincode) {
       return res.status(400).json({ error: 'All customer details are required' });
     }
-    
+
+    if (!emailRegex.test(String(customerEmail))) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    if (!/^[0-9]{6}$/.test(String(customerPincode))) {
+      return res.status(400).json({ error: 'Pincode must be 6 digits' });
+    }
+
     if (!['online', 'cod'].includes(paymentMethod)) {
       return res.status(400).json({ error: 'Invalid payment method' });
     }
-    
-    const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    const normalizedItems = [];
+    for (const item of items) {
+      const { value, error } = normalizeItem(item);
+      if (error) return res.status(400).json({ error });
+      normalizedItems.push(value);
+    }
+
+    const specialInstructions = String(req.body.specialInstructions || '').trim().slice(0, MAX_NOTE_LENGTH);
+
+    const subtotal = normalizedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const shippingCost = subtotal >= 2000 ? 0 : 99;
     const tax = Math.round(subtotal * 0.05);
     const totalAmount = subtotal + shippingCost + tax;
@@ -58,8 +100,8 @@ router.post('/', optionalAuth, (req, res) => {
         customerAddress,
         customerCity,
         customerPincode,
-        specialInstructions || '',
-        JSON.stringify(items),
+        specialInstructions,
+        JSON.stringify(normalizedItems),
         subtotal,
         shippingCost,
         tax,
