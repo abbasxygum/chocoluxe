@@ -1,6 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
-const { get, run } = require('./db');
+const { get, run } = require('../db');
 const { Cashfree } = require('cashfree-pg');
 
 const router = express.Router();

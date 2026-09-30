@@ -2,27 +2,111 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Payment Status</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Payment Status — Chocoluxe by Iram</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="Pictures/favicon-32x32.png">
+    <link rel="stylesheet" href="style.css">
     <style>
-        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
-        .container { max-width: 600px; margin: auto; }
-        h1 { color: #4CAF50; }
+        body { min-height: 100vh; display: grid; place-items: center; background: var(--cream); }
+        .status-card {
+            background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-md);
+            width: min(520px, 92vw); padding: 44px 36px; text-align: center;
+        }
+        .status-icon { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 20px; display: grid; place-items: center; font-size: 2rem; color: #fff; }
+        .status-icon.pending { background: var(--gold-2); }
+        .status-icon.success { background: var(--success); }
+        .status-icon.error { background: var(--danger); }
+        .status-card h1 { font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 10px; }
+        .status-card p { color: var(--muted); margin-bottom: 8px; }
+        .status-meta { background: var(--cream-2); border-radius: 12px; padding: 16px; margin: 22px 0; font-size: .95rem; }
+        .status-meta .row { display: flex; justify-content: space-between; padding-block: 4px; }
+        .status-meta .row span:first-child { color: var(--muted); }
+        .status-actions { display: flex; gap: 12px; justify-content: center; margin-top: 22px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Thank You!</h1>
-        <p>Your payment status is being processed. We will notify you shortly.</p>
-        <p>Order ID: <span id="order-id"></span></p>
-        <a href="index.html">Return to Homepage</a>
+    <div class="status-card">
+        <div class="status-icon pending" id="status-icon">&#8987;</div>
+        <h1 id="status-title">Checking payment…</h1>
+        <p id="status-text">Please wait a moment while we confirm your order.</p>
+        <div class="status-meta" id="status-meta">
+            <div class="row"><span>Order ID</span><strong id="order-id">-</strong></div>
+        </div>
+        <div class="status-actions">
+            <a href="index.html" class="btn btn-gold">Back to Store</a>
+            <a href="#" class="btn btn-ghost" id="retry-btn" style="display:none">Retry Payment</a>
+        </div>
     </div>
+
     <script>
-        // This script will display the order ID from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const orderId = urlParams.get('order_id');
-        if (orderId) {
-            document.getElementById('order-id').textContent = orderId;
-        }
+        (function () {
+            var API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                ? window.location.origin + '/api' : '/api';
+            var params = new URLSearchParams(window.location.search);
+            var orderId = params.get('order_id');
+
+            function money(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
+
+            function render(status, title, text, extraHtml) {
+                var icon = document.getElementById('status-icon');
+                icon.textContent = status === 'success' ? '\u2713' : status === 'error' ? '\u00d7' : '\u231B';
+                icon.className = 'status-icon ' + status;
+                document.getElementById('status-title').textContent = title;
+                document.getElementById('status-text').textContent = text;
+                if (extraHtml) {
+                    var rows = extraHtml.map(function (r) {
+                        return '<div class="row"><span>' + r[0] + '</span><strong>' + r[1] + '</strong></div>';
+                    }).join('');
+                    document.getElementById('status-meta').innerHTML = '<div class="row"><span>Order ID</span><strong id="order-id">' + orderId + '</strong></div>' + rows;
+                }
+            }
+
+            async function load() {
+                if (!orderId) {
+                    render('error', 'No order found', 'We couldn\u2019t find an order reference in this page.');
+                    return;
+                }
+                document.getElementById('order-id').textContent = orderId;
+                try {
+                    var res = await fetch(API + '/orders/guest/' + orderId);
+                    var data = await res.json();
+                    if (!res.ok || !data.order) {
+                        render('pending', 'Payment processing', 'Your payment may still be in progress. We\u2019ll confirm your order shortly.');
+                        return;
+                    }
+                    var o = data.order;
+                    if (o.payment_status === 'paid') {
+                        render('success', 'Payment successful!', 'Thank you! Your personalised chocolates are being prepared.', [
+                            ['Order', '<span class="mono">' + o.order_id + '</span>'],
+                            ['Amount paid', money(o.total_amount)],
+                            ['Payment', 'Paid online'],
+                            ['Status', o.order_status.charAt(0).toUpperCase() + o.order_status.slice(1)]
+                        ]);
+                    } else if (o.payment_status === 'failed') {
+                        render('error', 'Payment not completed', 'Your payment did not go through. You can retry or try Cash on Delivery.', [
+                            ['Order', o.order_id],
+                            ['Amount', money(o.total_amount)]
+                        ]);
+                        document.getElementById('retry-btn').style.display = 'inline-flex';
+                    } else {
+                        render('pending', 'Payment processing', 'We have received your order and are confirming the payment.', [
+                            ['Order', o.order_id],
+                            ['Amount', money(o.total_amount)]
+                        ]);
+                    }
+                } catch (e) {
+                    render('pending', 'Payment processing', 'We couldn\u2019t reach the server right now. Please check your order shortly.');
+                }
+            }
+
+            document.getElementById('retry-btn').addEventListener('click', function (e) {
+                e.preventDefault();
+                if (orderId) window.location.href = 'index.html';
+            });
+
+            load();
+        })();
     </script>
 </body>
 </html>

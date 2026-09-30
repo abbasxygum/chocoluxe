@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { get } = require('./db');
+const { get } = require('../db');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'chocoluxe-super-secret-jwt-key-change-in-production';
 const JWT_EXPIRES_IN = '7d';

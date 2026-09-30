@@ -1,7 +1,7 @@
 const express = require('express');
-const { get, run } = require('./db');
+const { get, run } = require('../db');
 const { Cashfree } = require('cashfree-pg');
-const { authMiddleware, optionalAuth } = require('./middleware/auth');
+const { authMiddleware, optionalAuth } = require('../middleware/auth');
 
 const router = express.Router();
 

@@ -3,279 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chocoluxe by Iram</title>
+    <title>Chocoluxe by Iram — Handcrafted Chocolates, Made Fresh Daily</title>
+    <meta name="description" content="Small-batch artisan chocolates made fresh every morning — bars, truffles, lollipops, fudge and gift boxes, each one personalisable with your own message.">
     <link rel="icon" type="image/png" sizes="32x32" href="Pictures/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="Pictures/favicon-16x16.png">
     <link rel="shortcut icon" href="Pictures/favicon.ico" type="image/x-icon">
-    
-    <!-- For iPhone/iPad -->
     <link rel="apple-touch-icon" sizes="180x180" href="Pictures/apple-touch-icon.png">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Loading Spinner -->
-    <div id="loading"></div>
+    <div id="loading" class="spinner-overlay" aria-hidden="true"><div class="spinner"></div></div>
 
-    <header>
-        <div class="header-container">
-            <h1>Chocoluxe by Iram</h1>
-            <div class="mobile-menu-toggle" id="mobile-menu-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <nav id="main-nav">
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#products">Products</a></li>
-                    <li><a href="#specials">Special Editions</a></li>
-                    <li><a href="#cart" id="cart-nav">Cart <span id="cart-count">0</span></a></li>
-                </ul>
+    <div class="announce" id="announce">
+        <p>Made fresh every morning &nbsp;·&nbsp; Free delivery on orders over &#8377;999 &nbsp;·&nbsp; Your message printed free on every order</p>
+    </div>
+
+    <header class="site-header" id="site-header">
+        <div class="container header-inner">
+            <a href="#home" class="brand" aria-label="Chocoluxe by Iram home">
+                <span class="brand-mark">CX</span>
+                <span class="brand-name">Chocoluxe<small>by Iram</small></span>
+            </a>
+            <nav class="main-nav" id="main-nav" aria-label="Primary">
+                <a href="#story">Our Story</a>
+                <a href="#shop">Shop</a>
+                <a href="#personalise">Personalise</a>
+                <a href="#contact">Contact</a>
             </nav>
+            <div class="header-actions">
+                <button class="icon-btn nav-search-btn" id="open-search" aria-label="Search products">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+                </button>
+                <button class="cart-badge" id="cart-badge" aria-label="Open cart">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1.4"></circle>
+                        <circle cx="19" cy="21" r="1.4"></circle>
+                        <path d="M2 2h3l2.5 12.5a2 2 0 0 0 2 1.5h8.7a2 2 0 0 0 2-1.6L22 6H6"></path>
+                    </svg>
+                    <span class="cart-count" id="cart-count">0</span>
+                </button>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <section id="slider">
-        <div class="slide active">
-            <img src="Pictures/36F9F348-3217-4C04-8549-9F7C70168CE8.jpg" alt="Handcrafted Chocolates">
-        </div>
-        <div class="slide">
-            <img src="Pictures/40F25117-91E4-4375-B8F0-83D216D5151F.jpg" alt="Luxury Chocolate Boxes">
-        </div>
-        <div class="slide">
-            <img src="Pictures/6FF508A8-ED60-4EEE-9B7C-2FFBD0302F1A.jpg" alt="Limited Edition Treats">
-        </div>
-    
-        <!-- Add arrows -->
-        <button id="prev">&#10094;</button>
-        <button id="next">&#10095;</button>
-    </section>
-    
-
-    <section id="about">
-        <h2>About Us</h2>
-        <p>Handmade with love, our artisan chocolates bring luxury and passion together. Every piece is a masterpiece crafted with premium ingredients.</p>
-    </section>
-
-    <section id="products">
-      <h2>Our Collection</h2>
-      <div class="product-grid">
-          <!-- Product 1 -->
-          <div class="product">
-              <img src="Pictures/83F17655-3427-4781-9564-94A5ED6C29C8.jpg" alt="Floral Artisian Chocolates">
-              <h3>Floral Artisian Chocolates</h3>
-              <p>₹499 (Small), ₹749 (Medium), ₹1380 (Large)</p>
-              <div class="product-controls">
-                  <div class="product-options">
-                      <select id="size1">
-                          <option value="small">Small</option>
-                          <option value="medium">Medium</option>
-                          <option value="large">Large</option>
-                      </select>
-                      <input type="number" id="quantity1" value="1" min="1" max="10" />
-                  </div>
-                  <button class="add-to-cart-btn" onclick="addToCart('Floral Artisian Chocolates', getPriceCollection('size1'), document.getElementById('quantity1').value)">Add to Cart</button>
-              </div>
-          </div>
-          
-          <!-- Product 2 -->
-          <div class="product">
-              <img src="Pictures/84B74416-EDF1-4056-973C-02667F74312B.jpg" alt="Dry Fruit Artisian Chocolates">
-              <h3>Dry Fruit Artisian Chocolates</h3>
-              <p>₹499 (Small), ₹749 (Medium), ₹1380 (Large)</p>
-              <div class="product-controls">
-                  <div class="product-options">
-                      <select id="size2">
-                          <option value="small">Small</option>
-                          <option value="medium">Medium</option>
-                          <option value="large">Large</option>
-                      </select>
-                      <input type="number" id="quantity2" value="1" min="1" max="10" />
-                  </div>
-                  <button class="add-to-cart-btn" onclick="addToCart('Dry Fruit Artisian Chocolates', getPriceCollection('size2'), document.getElementById('quantity2').value)">Add to Cart</button>
-              </div>
-          </div>
-          
-          <!-- Product 3 -->
-          <div class="product">
-              <img src="Pictures/8678FCA6-81D7-443F-BBD6-16A9BF6698CC.jpg" alt="Floral+Dry Fruit Artisian Chocolate">
-              <h3>Floral+Dry Fruit Artisian Chocolate</h3>
-              <p>₹499 (Small), ₹749 (Medium), ₹1380 (Large)</p>
-              <div class="product-controls">
-                  <div class="product-options">
-                      <select id="size3">
-                          <option value="small">Small</option>
-                          <option value="medium">Medium</option>
-                          <option value="large">Large</option>
-                      </select>
-                      <input type="number" id="quantity3" value="1" min="1" max="10" />
-                  </div>
-                  <button class="add-to-cart-btn" onclick="addToCart('Floral+Dry Fruit Artisian Chocolate', getPriceCollection('size3'), document.getElementById('quantity3').value)">Add to Cart</button>
-              </div>
-          </div>
-      </div>
-  </section>
-  
-
-    <section id="specials">
-      <h2>Limited Edition Treats</h2>
-      <p>Exclusive luxury packs available only this season. Grab yours now!</p>
-      
-      <!-- Product Cards for Special Editions -->
-      <div class="special-edition-grid">
-          <!-- Section 1: Dark Chocolate Delights -->
-          <div class="special-edition-item">
-              <img src="Pictures/single pinata.jpg" alt="Mono Beauty of Pinata">
-              <h3>Mono Beauty of Pinata</h3>
-              <div class="product-controls">
-                  <div class="product-options">
-                      <select id="Mono-Beauty-of-Pinata-size">
-                          <option value="499">Small (₹499)</option>
-                          <option value="749">Medium (₹749)</option>
-                          <option value="1380">Large (₹1380)</option>
-                      </select>
-                      <input type="number" id="Mono-Beauty-of-Pinata-quantity" value="1" min="1" max="10">
-                  </div>
-                  <button class="add-to-cart-btn" onclick="addToCart('Mono Beauty of Pinata', document.getElementById('Mono-Beauty-of-Pinata-size').value, document.getElementById('Mono-Beauty-of-Pinata-quantity').value)">Add to Cart</button>
-              </div>
-          </div>
-          
-          <!-- Section 2: Caramelized Hazelnuts -->
-          <div class="special-edition-item">
-              <img src="Pictures/9D8EFE05-2BBE-4260-A890-63E8A812FCD3.jpg" alt="Tetraluxe Truffles">
-              <h3>Tetraluxe Truffles</h3>
-              <div class="product-controls">
-                  <div class="product-options">
-                      <select id="Tetraluxe-Truffles-size">
-                          <option value="499">Small (₹499)</option>
-                          <option value="749">Medium (₹749)</option>
-                          <option value="1380">Large (₹1380)</option>
-                      </select>
-                      <input type="number" id="Tetraluxe-Truffles-quantity" value="1" min="1" max="10">
-                  </div>
-                  <button class="add-to-cart-btn" onclick="addToCart('Tetraluxe Truffles', document.getElementById('Tetraluxe-Truffles-size').value, document.getElementById('Tetraluxe-Truffles-quantity').value)">Add to Cart</button>
-              </div>
-          </div>
-  
-          <!-- Section 3: Gold Dusted Truffles -->
-          <div class="special-edition-item">
-              <img src="Pictures/IMG_0853.jpg" alt="Gold Dusted Truffles">
-              <h3>Gold Dusted Truffles</h3>
-              <div class="product-controls">
-                  <div class="product-options">
-                      <select id="gold-dusted-truffles-size">
-                          <option value="499">Small (₹499)</option>
-                          <option value="749">Medium (₹749)</option>
-                          <option value="1380">Large (₹1380)</option>
-                      </select>
-                      <input type="number" id="gold-dusted-truffles-quantity" value="1" min="1" max="10">
-                  </div>
-                  <button class="add-to-cart-btn" onclick="addToCart('Gold Dusted Truffles', document.getElementById('gold-dusted-truffles-size').value, document.getElementById('gold-dusted-truffles-quantity').value)">Add to Cart</button>
-              </div>
-          </div>
-  
-          <!-- Section 4: Chocolate Trio Box -->
-          <div class="special-edition-item">
-              <img src="Pictures/CA6F6DAD-209B-456E-9B2F-50E69C4BFBE2.jpg" alt="Chocolate Trio Box">
-              <h3>Chocolate Trio Box</h3>
-              <div class="product-controls">
-                  <div class="product-options">
-                      <select id="chocolate-trio-size">
-                          <option value="499">Small (₹499)</option>
-                          <option value="749">Medium (₹749)</option>
-                          <option value="1380">Large (₹1380)</option>
-                      </select>
-                      <input type="number" id="chocolate-trio-quantity" value="1" min="1" max="10">
-                  </div>
-                  <button class="add-to-cart-btn" onclick="addToCart('Chocolate Trio Box', document.getElementById('chocolate-trio-size').value, document.getElementById('chocolate-trio-quantity').value)">Add to Cart</button>
-              </div>
-          </div>
-      </div>
-  </section>
-  
-
-    <section id="cart">
-        <div class="cart-container">
-            <h2>Your Cart</h2>
-            <div id="cart-items" class="cart-items"></div>
-            <div id="cart-summary" class="cart-summary">
-                <h3 id="total">Total: ₹0</h3>
-                <div class="cart-actions">
-                    <button onclick="clearCart()" id="clear-btn" class="clear-cart-btn" style="display:none;">Clear Cart</button>
-                    <button onclick="proceedToCheckout()" id="buy-btn" class="checkout-btn" style="display:none;">Proceed to Checkout</button>
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-slider" id="hero-slider">
+                <div class="slide active"><img src="Pictures/36F9F348-3217-4C04-8549-9F7C70168CE8.jpg" alt="Handcrafted artisan chocolates"></div>
+                <div class="slide"><img src="Pictures/40F25117-91E4-4375-B8F0-83D216D5151F.jpg" alt="Chocolate boxes wrapped and ready to gift"></div>
+                <div class="slide"><img src="Pictures/6FF508A8-ED60-4EEE-9B7C-2FFBD0302F1A.jpg" alt="Limited edition chocolate treats"></div>
+            </div>
+            <div class="hero-scrim"></div>
+            <div class="hero-content">
+                <p class="script">hello, welcome in</p>
+                <h1>Chocolates made<br>in a small kitchen,<br>just like home.</h1>
+                <p>Everything is tempered, rolled and wrapped by hand in Mumbai — then delivered with whatever message you want printed alongside it.</p>
+                <div class="hero-actions">
+                    <a href="#shop" class="btn btn-clay">Browse the counter</a>
+                    <a href="#personalise" class="btn btn-ghost-light">See how personalising works</a>
                 </div>
             </div>
-            <div id="empty-cart" class="empty-cart">
-                <p>Your cart is empty</p>
-                <a href="#products" class="continue-shopping">Continue Shopping</a>
-            </div>
-        </div>
-    </section>
+            <button class="slide-arrow prev" id="hero-prev" aria-label="Previous slide">&#10094;</button>
+            <button class="slide-arrow next" id="hero-next" aria-label="Next slide">&#10095;</button>
+        </section>
 
-    <!-- Checkout Modal -->
-    <div id="checkout-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Checkout</h2>
-                <span class="close" onclick="closeCheckoutModal()">&times;</span>
+        <section class="trust-strip" aria-label="Why shop with us">
+            <div class="container trust-inner">
+                <div class="trust-item"><span>&#127856;</span><p><strong>Made fresh daily</strong><small>Nothing sits on a shelf</small></p></div>
+                <div class="trust-item"><span>&#128230;</span><p><strong>Free over &#8377;999</strong><small>Delivered across India</small></p></div>
+                <div class="trust-item"><span>&#9993;</span><p><strong>Free personalisation</strong><small>On every single order</small></p></div>
+                <div class="trust-item"><span>&#127873;</span><p><strong>Wrapped by hand</strong><small>Ribbon, tissue, and a card</small></p></div>
+            </div>
+        </section>
+
+        <section id="story" class="section">
+            <div class="container about-wrap">
+                <div class="about-media">
+                    <img src="Pictures/963236B6-7570-43C5-98FE-10C6AA823E30.jpg" alt="Chocoluxe chocolates being prepared by hand" loading="lazy">
+                    <span class="about-stamp">est. 2019</span>
+                </div>
+                <div class="about-copy">
+                    <p class="eyebrow">Our kitchen</p>
+                    <h2>A small counter, a big obsession</h2>
+                    <p>Chocoluxe started the way most good things do — with one tempering bowl, a second hand, and a stubborn belief that chocolate should be made the slow way. We still work that way.</p>
+                    <p>Every morning the team melts couverture, folds in the fillings, and hands-rolls the bonbons while they're still warm. We only make what the order book asks for, which is why some things run out and some things only appear for a season.</p>
+                    <ul class="about-points">
+                        <li>Single-origin couverture, roasted in-house</li>
+                        <li>No palm fat, no artificial flavouring, ever</li>
+                        <li>Rolled and wrapped by the same four people who mix it</li>
+                    </ul>
+                    <p class="script signature">— Iram</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="shop" class="section section-cream">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">The counter</p>
+                    <h2>Pick something lovely</h2>
+                    <p>Everything below is made to order. Choose a size, add a message, and we'll take it from there.</p>
+                </div>
+
+                <div class="shop-bar">
+                    <div class="category-chips" id="category-chips" role="tablist" aria-label="Product categories"></div>
+                    <div class="shop-search">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+                        <input type="search" id="product-search" placeholder="Search for truffles, bars, fudge…" aria-label="Search products">
+                    </div>
+                </div>
+
+                <p class="shop-count" id="shop-count" role="status" aria-live="polite"></p>
+                <div class="grid product-grid" id="product-grid"></div>
+                <div class="shop-empty" id="shop-empty" hidden>
+                    <span class="empty-icon">&#128521;</span>
+                    <h3>Nothing here just yet</h3>
+                    <p>Try another category, or clear your search to see the whole counter.</p>
+                    <button class="btn btn-clay" id="clear-filters">Show everything</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="personalise" class="section section-dark personalise">
+            <div class="container personalise-wrap">
+                <div class="personalise-copy">
+                    <p class="script">the part people remember</p>
+                    <h2>Write it on the box</h2>
+                    <p>Add a message when you add the chocolate — up to fifty characters, handwritten onto a kraft card and tucked under the ribbon. Birthdays, apologies, thank-yous, proposals. Then tell us anything else in the delivery note at checkout.</p>
+                    <ol class="steps-list">
+                        <li><span>1</span><p><strong>Choose your chocolate</strong><small>Pick a size and how many</small></p></li>
+                        <li><span>2</span><p><strong>Write your message</strong><small>We hand-write it on kraft card</small></p></li>
+                        <li><span>3</span><p><strong>We wrap and deliver</strong><small>Fresh, cold, on time</small></p></li>
+                    </ol>
+                    <a href="#shop" class="btn btn-clay">Start with a box</a>
+                </div>
+                <div class="personalise-card" aria-hidden="true">
+                    <div class="note-paper">
+                        <span class="tape"></span>
+                        <p class="note-label">handwritten for you</p>
+                        <p class="note-message">Happy Birthday Aisha!<br>With love, from all of us</p>
+                        <p class="note-sign">Chocoluxe <small>by Iram</small></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section section-cream">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Say hello</p>
+                    <h2>Bulk orders &amp; business gifting</h2>
+                    <p>Wedding favours, corporate hampers, or a very large birthday — tell us what you need.</p>
+                </div>
+                <div class="contact-cards">
+                    <a class="contact-card" href="https://www.instagram.com/chocoluxe.ig/" target="_blank" rel="noopener">
+                        <span class="contact-icon">IG</span>
+                        <strong>@chocoluxe.ig</strong>
+                        <small>Daily drops &amp; behind the scenes</small>
+                    </a>
+                    <a class="contact-card" href="https://wa.me/919103436363" target="_blank" rel="noopener">
+                        <span class="contact-icon">WA</span>
+                        <strong>WhatsApp us</strong>
+                        <small>Fast replies for orders &amp; queries</small>
+                    </a>
+                    <div class="contact-card">
+                        <span class="contact-icon">DX</span>
+                        <strong>Delivered across India</strong>
+                        <small>Fresh, secure and gift-wrapped</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <span class="brand-mark">CX</span>
+                <strong>Chocoluxe <small>by Iram</small></strong>
+                <p>Handcrafted chocolate, made in small batches, by hand.</p>
+            </div>
+            <nav class="footer-nav" aria-label="Footer">
+                <a href="#story">Our Story</a>
+                <a href="#shop">Shop</a>
+                <a href="#personalise">Personalise</a>
+                <a href="#contact">Contact</a>
+                <a href="admin-login.html">Admin</a>
+            </nav>
+        </div>
+        <div class="container footer-bottom">
+            <p>&copy; <span id="year"></span> Chocoluxe by Iram &nbsp;·&nbsp; Made slowly, wrapped carefully.</p>
+        </div>
+    </footer>
+
+    <!-- Search overlay -->
+    <div class="search-bar" id="search-bar" hidden>
+        <div class="container search-bar-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+            <input type="search" id="search-bar-input" placeholder="Search the counter…" aria-label="Search products">
+            <button class="icon-btn" id="close-search" aria-label="Close search">&times;</button>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
+    <aside class="cart-drawer" id="cart-drawer" aria-label="Shopping cart" aria-hidden="true">
+        <div class="drawer-head">
+            <h3>Your basket</h3>
+            <button class="icon-btn" id="close-cart" aria-label="Close cart">&times;</button>
+        </div>
+        <div class="drawer-body" id="cart-items"></div>
+        <div class="drawer-foot" id="cart-summary">
+            <div class="totals">
+                <div class="total-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
+                <div class="total-row"><span>Delivery</span><span id="shipping">₹0</span></div>
+                <div class="total-row"><span>GST (5%)</span><span id="tax">₹0</span></div>
+                <div class="total-row total"><span>Total</span><span id="cart-total">₹0</span></div>
+            </div>
+            <p class="ship-hint" id="ship-hint"></p>
+            <button class="btn btn-clay btn-block" id="checkout-btn">Checkout</button>
+        </div>
+        <div class="drawer-empty" id="cart-empty">
+            <span class="empty-icon">&#128465;</span>
+            <p>Your basket is empty</p>
+            <a href="#shop" class="btn btn-outline" id="continue-shopping">Back to the counter</a>
+        </div>
+    </aside>
+
+    <!-- Message / Personalisation Modal -->
+    <div class="modal-backdrop" id="message-modal" hidden>
+        <div class="modal-card modal-sm">
+            <div class="modal-head">
+                <h3>Add a message</h3>
+                <button class="icon-btn" data-close="message-modal" aria-label="Close">&times;</button>
             </div>
             <div class="modal-body">
-                <div id="checkout-step-1" class="checkout-step active">
-                    <h3>Customer Information</h3>
-                    <form id="customer-form">
-                        <div class="form-group">
-                            <label for="customer-name">Full Name *</label>
-                            <input type="text" id="customer-name" name="name" required>
+                <p class="modal-lead">We'll hand-write this onto a kraft card and tuck it under the ribbon. Up to 50 characters.</p>
+                <div class="message-preview" id="message-preview">
+                    <span class="message-preview-label">your message</span>
+                    <p id="message-preview-text">Happy Birthday Aisha!</p>
+                </div>
+                <label class="field">
+                    <span>Message for <strong id="message-product-name">this item</strong></span>
+                    <textarea id="message-input" maxlength="50" rows="3" placeholder="Happy Birthday Aisha! With love"></textarea>
+                    <small><span id="message-count">0</span>/50 characters</small>
+                </label>
+                <div class="modal-actions">
+                    <button class="btn btn-ghost" id="message-skip">No message</button>
+                    <button class="btn btn-clay" id="message-confirm">Add to basket</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal-backdrop" id="checkout-modal" hidden>
+        <div class="modal-card modal-lg">
+            <div class="modal-head">
+                <h3>Checkout</h3>
+                <button class="icon-btn" data-close="checkout-modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="steps-dots" id="checkout-steps">
+                <span class="dot active" data-title="Your details"></span>
+                <span class="dot" data-title="Review &amp; pay"></span>
+            </div>
+
+            <div class="modal-body">
+                <!-- Step 1 -->
+                <div class="checkout-step" id="checkout-step-1">
+                    <form id="order-form" novalidate>
+                        <div class="form-row">
+                            <div class="field">
+                                <label for="customer-name">Full name <em>*</em></label>
+                                <input type="text" id="customer-name" required autocomplete="name">
+                            </div>
+                            <div class="field">
+                                <label for="customer-phone">Phone <em>*</em></label>
+                                <input type="tel" id="customer-phone" required autocomplete="tel" pattern="[0-9+ ]{8,15}">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="customer-email">Email *</label>
-                            <input type="email" id="customer-email" name="email" required>
+                        <div class="field">
+                            <label for="customer-email">Email <em>*</em></label>
+                            <input type="email" id="customer-email" required autocomplete="email">
                         </div>
-                        <div class="form-group">
-                            <label for="customer-phone">Phone Number *</label>
-                            <input type="tel" id="customer-phone" name="phone" required>
+                        <div class="field">
+                            <label for="customer-address">Delivery address <em>*</em></label>
+                            <textarea id="customer-address" rows="3" required autocomplete="street-address"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="customer-address">Delivery Address *</label>
-                            <textarea id="customer-address" name="address" required rows="3"></textarea>
+                        <div class="form-row">
+                            <div class="field">
+                                <label for="customer-city">City <em>*</em></label>
+                                <input type="text" id="customer-city" required autocomplete="address-level2">
+                            </div>
+                            <div class="field">
+                                <label for="customer-pincode">Pincode <em>*</em></label>
+                                <input type="text" id="customer-pincode" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="customer-city">City *</label>
-                            <input type="text" id="customer-city" name="city" required>
+                        <div class="field">
+                            <label for="order-note">Gift message / delivery note <span>(optional)</span></label>
+                            <textarea id="order-note" rows="3" maxlength="500" placeholder="e.g. Please deliver Sunday morning. It's a surprise — no price tag, please."></textarea>
+                            <small><span id="note-count">0</span>/500 characters</small>
                         </div>
-                        <div class="form-group">
-                            <label for="customer-pincode">Pincode *</label>
-                            <input type="text" id="customer-pincode" name="pincode" required pattern="[0-9]{6}">
-                        </div>
-                        <div class="form-group">
-                            <label for="special-instructions">Special Instructions (Optional)</label>
-                            <textarea id="special-instructions" name="instructions" rows="2"></textarea>
-                        </div>
-                        <button type="button" onclick="proceedToPayment()" class="next-btn">Continue to Payment</button>
+                        <button type="submit" class="btn btn-clay btn-block">Review order</button>
                     </form>
                 </div>
-                
-                <div id="checkout-step-2" class="checkout-step">
-                    <h3>Order Summary</h3>
-                    <div id="order-summary"></div>
-                    <div class="payment-section">
-                        <h3>Payment</h3>
-                        <div class="payment-options">
-                            <label class="payment-option">
-                                <input type="radio" name="payment-method" value="online" checked>
-                                <span>Pay Online (Secure)</span>
-                                <small>Cards, UPI, Net Banking, Wallets</small>
-                            </label>
-                            <label class="payment-option">
-                                <input type="radio" name="payment-method" value="cod">
-                                <span>Cash on Delivery</span>
-                                <small>Pay when you receive your order</small>
-                            </label>
+
+                <!-- Step 2 -->
+                <div class="checkout-step" id="checkout-step-2" hidden>
+                    <div class="summary-wrap">
+                        <div>
+                            <h4 class="summary-title">Your order</h4>
+                            <div id="order-summary"></div>
                         </div>
-                        <div class="checkout-actions">
-                            <button type="button" onclick="goBackToInfo()" class="back-btn">Back</button>
-                            <button type="button" onclick="processPayment()" class="pay-btn">Place Order</button>
+                        <div class="payment-box">
+                            <h4 class="summary-title">How would you like to pay?</h4>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="online">
+                                <span class="payment-card">
+                                    <strong>Pay online</strong>
+                                    <small>Cards, UPI, net banking, wallets</small>
+                                </span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="cod">
+                                <span class="payment-card">
+                                    <strong>Cash on delivery</strong>
+                                    <small>Pay the courier when it arrives</small>
+                                </span>
+                            </label>
+                            <div class="modal-actions split">
+                                <button class="btn btn-ghost" id="back-to-info">Back</button>
+                                <button class="btn btn-clay" id="place-order">Place order</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -283,35 +349,19 @@
         </div>
     </div>
 
-    <footer id="contact">
-        <p>© 2025 Artisan Chocolates | Handmade with love</p>
-        <p>Follow us on <a href="https://www.instagram.com/chocoluxe.ig/">Instagram</a> | <a href="#">Facebook</a></p>
-    </footer>
-
-    <script src="cashfree-config.js"></script>
-    <script src="script.js"></script>
-    <script src="https://performanceangry.com/f0/1d/6c/f01d6c880b0f8bffae6b980ef2624da6.js"></script>
-    </body>
-
-    <!-- Customization Modal -->
-    <div id="customization-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Personalize Your Chocolates</h2>
-                <span class="close-modal" style="cursor:pointer">&times;</span>
-            </div>
-            <div class="modal-body">
-                <label for="customization-input">Enter your personalization message (max 50 characters):</label>
-                <input type="text" id="customization-input" maxlength="50" style="width:100%;margin-bottom:10px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                    <span>Characters: <span id="char-count">0</span>/50</span>
-                </div>
-                <div style="display:flex;gap:10px;">
-                    <button id="confirm-customization" class="add-to-cart-btn">Confirm</button>
-                    <button id="cancel-customization" class="clear-cart-btn">Cancel</button>
-                </div>
-            </div>
+    <!-- Success Modal -->
+    <div class="modal-backdrop" id="success-modal" hidden>
+        <div class="modal-card modal-sm center">
+            <span class="success-check">&#10003;</span>
+            <h3 id="success-title">Thank you!</h3>
+            <p id="success-text">Your order has been placed.</p>
+            <div class="success-order" id="success-order"></div>
+            <button class="btn btn-clay btn-block" data-close="success-modal">Keep browsing</button>
         </div>
     </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="script.js"></script>
 </body>
 </html>

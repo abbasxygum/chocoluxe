@@ -81,6 +81,7 @@ const paymentLimiter = rateLimit({
 
 app.use('/api/', apiLimiter);
 app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/admin/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 app.use('/api/payment/create-order', paymentLimiter);
 

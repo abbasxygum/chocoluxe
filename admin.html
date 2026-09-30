@@ -3,162 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chocoluxe Admin Panel</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>Order Manager — Chocoluxe by Iram</title>
     <link rel="icon" type="image/png" sizes="32x32" href="Pictures/favicon-32x32.png">
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
     <div id="admin-app">
-        <!-- Login Screen -->
-        <div id="login-screen" class="login-screen">
-            <div class="login-container">
-                <div class="login-header">
-                    <img src="Pictures/favicon-32x32.png" alt="Chocoluxe" class="login-logo">
-                    <h1>Chocoluxe Admin</h1>
-                    <p>Sign in to manage your chocolate store</p>
-                </div>
-                <form id="login-form" class="login-form">
-                    <div class="form-group">
-                        <label for="admin-email">Email</label>
-                        <input type="email" id="admin-email" name="email" required autocomplete="email">
-                    </div>
-                    <div class="form-group">
-                        <label for="admin-password">Password</label>
-                        <input type="password" id="admin-password" name="password" required autocomplete="current-password">
-                    </div>
-                    <button type="submit" class="login-btn">Sign In</button>
-                </form>
-                <div id="login-error" class="login-error" style="display: none;"></div>
-            </div>
+        <!-- Login gate -->
+        <div id="login-gate" class="login-gate" hidden>
+            <p>You need admin access to view this page.</p>
+            <a href="admin-login.html" class="btn btn-gold">Sign in</a>
         </div>
 
-        <!-- Admin Dashboard -->
-        <div id="dashboard-screen" class="dashboard-screen" style="display: none;">
+        <!-- Dashboard -->
+        <div id="dashboard" hidden>
             <header class="admin-header">
-                <div class="header-left">
-                    <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
-                        </svg>
-                    </button>
-                    <h1 class="admin-title">Chocoluxe Admin</h1>
+                <div class="header-inner">
+                    <button id="sidebar-toggle" class="icon-btn" aria-label="Toggle sidebar" title="Toggle sidebar">&#9776;</button>
+                    <h1 class="admin-title">Chocoluxe <small>by Iram</small></h1>
                 </div>
-                <div class="header-right">
-                    <div class="admin-user">
-                        <span id="admin-user-name">Admin</span>
-                        <button id="logout-btn" class="logout-btn">Logout</button>
-                    </div>
+                <div class="admin-user">
+                    <span id="admin-user-name" class="admin-name"></span>
+                    <a href="index.html" class="btn btn-ghost btn-sm" target="_blank" rel="noopener">View Store</a>
+                    <button id="logout-btn" class="btn btn-outline btn-sm">Logout</button>
                 </div>
             </header>
 
-            <div class="dashboard-container">
+            <div class="dashboard-layout">
                 <aside id="sidebar" class="sidebar">
                     <nav class="sidebar-nav">
-                        <a href="#dashboard" class="nav-item active" data-page="dashboard">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="3" width="7" height="7"></rect>
-                                <rect x="3" y="14" width="7" height="7"></rect>
-                                <rect x="14" y="14" width="7" height="7"></rect>
-                            </svg>
-                            Dashboard
+                        <a href="#overview" class="nav-item active" data-page="overview">
+                            <span class="nav-ic">&#9635;</span> Overview
                         </a>
                         <a href="#orders" class="nav-item" data-page="orders">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                <line x1="3" y1="6" x2="21" y2="6"></line>
-                                <path d="M16 10a4 4 0 0 1-8 0"></path>
-                            </svg>
-                            Orders
+                            <span class="nav-ic">&#9776;</span> Orders
+                            <span class="nav-badge" id="pending-count" hidden>0</span>
+                        </a>
+                        <a href="#messages" class="nav-item" data-page="messages">
+                            <span class="nav-ic">&#9993;</span> Custom Messages
                         </a>
                         <a href="#products" class="nav-item" data-page="products">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
-                            </svg>
-                            Products
-                        </a>
-                        <a href="#users" class="nav-item" data-page="users">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                            Customers
-                        </a>
-                        <a href="#analytics" class="nav-item" data-page="analytics">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="20" x2="18" y2="10"></line>
-                                <line x1="12" y1="20" x2="12" y2="4"></line>
-                                <line x1="6" y1="20" x2="6" y2="14"></line>
-                            </svg>
-                            Analytics
+                            <span class="nav-ic">&#127852;</span> Products
                         </a>
                     </nav>
+                    <div class="sidebar-foot">
+                        <p>Chocoluxe Order Manager</p>
+                    </div>
                 </aside>
 
                 <main class="main-content">
-                    <!-- Dashboard Page -->
-                    <section id="page-dashboard" class="page active">
-                        <div class="page-header">
-                            <h2>Dashboard</h2>
-                            <div class="page-actions">
-                                <span class="last-updated">Last updated: <span id="last-updated">-</span></span>
-                                <button id="refresh-dashboard" class="btn btn-secondary">Refresh</button>
-                            </div>
+                    <!-- Overview -->
+                    <section id="page-overview" class="page active">
+                        <div class="page-head">
+                            <h2>Overview</h2>
+                            <span class="muted" id="overview-updated"></span>
                         </div>
                         <div class="stats-grid" id="stats-grid"></div>
-                        <div class="dashboard-sections">
-                            <div class="dashboard-card">
-                                <h3>Recent Orders</h3>
-                                <div class="table-responsive">
-                                    <table id="recent-orders-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Customer</th>
-                                                <th>Amount</th>
-                                                <th>Payment</th>
-                                                <th>Status</th>
-                                                <th>Date</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="recent-orders-body"></tbody>
-                                    </table>
-                                </div>
+                        <div class="card">
+                            <div class="card-head">
+                                <h3>Recent orders</h3>
+                                <a href="#orders" class="link" data-goto="orders">View all &#8594;</a>
                             </div>
-                            <div class="dashboard-card">
-                                <h3>Pending Payments</h3>
-                                <div class="table-responsive">
-                                    <table id="pending-payments-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Customer</th>
-                                                <th>Amount</th>
-                                                <th>Date</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="pending-payments-body"></tbody>
-                                    </table>
-                                </div>
+                            <div class="table-wrap">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Order</th><th>Customer</th><th>Amount</th>
+                                            <th>Payment</th><th>Status</th><th>Date</th><th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-orders-body"></tbody>
+                                </table>
                             </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-head">
+                                <h3>Status breakdown</h3>
+                            </div>
+                            <div class="chips" id="status-chips"></div>
                         </div>
                     </section>
 
-                    <!-- Orders Page -->
+                    <!-- Orders -->
                     <section id="page-orders" class="page">
-                        <div class="page-header">
+                        <div class="page-head">
                             <h2>Orders</h2>
-                            <div class="page-filters">
-                                <select id="order-status-filter" class="filter-select">
-                                    <option value="">All Statuses</option>
+                            <div class="filters">
+                                <input type="text" id="order-search" class="input" placeholder="Search name, email, phone, order #">
+                                <select id="order-status-filter" class="input">
+                                    <option value="">All statuses</option>
                                     <option value="pending">Pending</option>
                                     <option value="confirmed">Confirmed</option>
                                     <option value="processing">Processing</option>
@@ -167,208 +101,180 @@
                                     <option value="cancelled">Cancelled</option>
                                     <option value="rejected">Rejected</option>
                                 </select>
-                                <select id="payment-status-filter" class="filter-select">
-                                    <option value="">All Payment Status</option>
-                                    <option value="pending">Pending</option>
+                                <select id="payment-filter" class="input">
+                                    <option value="">All payments</option>
                                     <option value="paid">Paid</option>
+                                    <option value="pending">Pending</option>
                                     <option value="failed">Failed</option>
                                     <option value="refunded">Refunded</option>
                                 </select>
-                                <input type="text" id="order-search" class="filter-input" placeholder="Search orders...">
+                                <button id="refresh-btn" class="btn btn-ghost btn-sm">Refresh</button>
                             </div>
                         </div>
-                        <div class="table-responsive">
-                            <table id="orders-table">
-                                <thead>
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th>Customer</th>
-                                        <th>Items</th>
-                                        <th>Amount</th>
-                                        <th>Payment</th>
-                                        <th>Status</th>
-                                        <th>Date</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="orders-body"></tbody>
-                            </table>
+                        <div class="card">
+                            <div class="table-wrap">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Order</th><th>Customer</th><th>Amount</th>
+                                            <th>Payment</th><th>Status</th><th>Date</th><th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="orders-body"></tbody>
+                                </table>
+                            </div>
+                            <div class="pagination" id="orders-pagination"></div>
                         </div>
-                        <div class="pagination" id="orders-pagination"></div>
                     </section>
 
-                    <!-- Products Page -->
+                    <!-- Custom Messages -->
+                    <section id="page-messages" class="page">
+                        <div class="page-head">
+                            <h2>Custom Messages</h2>
+                            <span class="muted">Personalisation &amp; notes customers left with their orders</span>
+                        </div>
+                        <div class="message-board" id="messages-board"></div>
+                    </section>
+
+                    <!-- Products -->
                     <section id="page-products" class="page">
-                        <div class="page-header">
+                        <div class="page-head">
                             <h2>Products</h2>
-                            <button id="add-product-btn" class="btn btn-primary">Add Product</button>
-                        </div>
-                        <div class="table-responsive">
-                            <table id="products-table">
-                                <thead>
-                                    <tr>
-                                        <th>Image</th>
-                                        <th>Name</th>
-                                        <th>Category</th>
-                                        <th>Base Price</th>
-                                        <th>Stock</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="products-body"></tbody>
-                            </table>
-                        </div>
-                    </section>
-
-                    <!-- Users Page -->
-                    <section id="page-users" class="page">
-                        <div class="page-header">
-                            <h2>Customers</h2>
-                            <input type="text" id="user-search" class="filter-input" placeholder="Search customers...">
-                        </div>
-                        <div class="table-responsive">
-                            <table id="users-table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Location</th>
-                                        <th>Orders</th>
-                                        <th>Joined</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="users-body"></tbody>
-                            </table>
-                        </div>
-                    </section>
-
-                    <!-- Analytics Page -->
-                    <section id="page-analytics" class="page">
-                        <div class="page-header">
-                            <h2>Analytics</h2>
-                            <select id="analytics-period" class="filter-select">
-                                <option value="7">Last 7 Days</option>
-                                <option value="30" selected>Last 30 Days</option>
-                                <option value="90">Last 90 Days</option>
-                            </select>
-                        </div>
-                        <div class="analytics-grid">
-                            <div class="analytics-card">
-                                <h3>Daily Orders & Revenue</h3>
-                                <canvas id="daily-chart"></canvas>
-                            </div>
-                            <div class="analytics-card">
-                                <h3>Order Status Distribution</h3>
-                                <canvas id="status-chart"></canvas>
-                            </div>
-                            <div class="analytics-card">
-                                <h3>Payment Methods</h3>
-                                <canvas id="payment-chart"></canvas>
-                            </div>
-                            <div class="analytics-card">
-                                <h3>Top Products</h3>
-                                <div class="table-responsive">
-                                    <table id="top-products-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Product</th>
-                                                <th>Quantity Sold</th>
-                                                <th>Revenue</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="top-products-body"></tbody>
-                                    </table>
-                                </div>
+                            <div class="head-actions">
+                                <input type="text" id="product-search" class="input" placeholder="Search products">
+                                <select id="product-category-filter" class="input">
+                                    <option value="">All categories</option>
+                                </select>
+                                <select id="product-stock-filter" class="input">
+                                    <option value="">All stock</option>
+                                    <option value="in">In stock</option>
+                                    <option value="out">Sold out</option>
+                                </select>
+                                <button class="btn btn-gold" id="new-product-btn">+ New product</button>
                             </div>
                         </div>
+                        <p class="muted" id="products-count"></p>
+                        <div class="product-grid-admin" id="admin-product-grid"></div>
                     </section>
                 </main>
             </div>
         </div>
     </div>
 
-    <!-- Order Detail Modal -->
-    <div id="order-modal" class="modal" style="display: none;">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h2>Order Details</h2>
-                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+    <!-- Product editor modal -->
+    <div class="modal-backdrop" id="product-modal" hidden>
+        <div class="modal-card modal-lg">
+            <div class="modal-head">
+                <h3 id="product-modal-title">New product</h3>
+                <button class="icon-btn" data-close="product-modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form" novalidate>
+                    <input type="hidden" id="product-id">
+
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="p-name">Product name <em>*</em></label>
+                            <input type="text" id="p-name" required maxlength="120">
+                        </div>
+                        <div class="field">
+                            <label for="p-category">Category <em>*</em></label>
+                            <select id="p-category" required></select>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="p-tagline">Short tagline <span>(shown on the card)</span></label>
+                        <input type="text" id="p-tagline" maxlength="160"
+                               placeholder="e.g. Creamy, 34% cocoa, nothing fussy">
+                    </div>
+
+                    <div class="field">
+                        <label for="p-description">Description <span>(shown when the card is expanded)</span></label>
+                        <textarea id="p-description" rows="3" maxlength="1200"
+                                  placeholder="The full story of what this tastes like"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="p-badge">Badge <span>(optional)</span></label>
+                            <input type="text" id="p-badge" maxlength="30" placeholder="Bestseller / New / Limited">
+                        </div>
+                        <div class="field">
+                            <label for="p-stock">Stock <em>*</em></label>
+                            <input type="number" id="p-stock" min="0" step="1" value="20" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="p-rating">Rating <span>(0&ndash;5)</span></label>
+                            <input type="number" id="p-rating" min="0" max="5" step="0.1" value="4.6">
+                        </div>
+                        <div class="field">
+                            <label for="p-rating-count">Number of reviews</label>
+                            <input type="number" id="p-rating-count" min="0" step="1" value="0">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="p-sizes">Sizes &amp; prices <em>*</em> <span>(one per line: <code>50g bar = 120</code>)</span></label>
+                        <textarea id="p-sizes" rows="4" required
+                                  placeholder="50g bar = 120&#10;Pack of 3 = 340"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label for="p-images">Photos <span>(paste paths from Pictures/, one per line)</span></label>
+                        <textarea id="p-images" rows="3" placeholder="Pictures/my-product.jpg"></textarea>
+                        <div class="photo-picker">
+                            <button type="button" class="btn btn-ghost btn-sm" id="load-photo-library">Choose from Pictures/</button>
+                            <div class="photo-grid" id="photo-library" hidden></div>
+                        </div>
+                        <div class="preview-row" id="product-preview"></div>
+                    </div>
+
+                    <div class="form-check">
+                        <label class="check">
+                            <input type="checkbox" id="p-active" checked> Visible on the storefront
+                        </label>
+                        <label class="check">
+                            <input type="checkbox" id="p-featured"> Feature this product
+                        </label>
+                    </div>
+
+                    <div class="modal-actions split">
+                        <button type="button" class="btn btn-ghost" data-close="product-modal">Cancel</button>
+                        <button type="button" class="btn btn-danger-ghost" id="delete-product" hidden>Remove</button>
+                        <button type="submit" class="btn btn-gold" id="save-product">Save product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order detail modal -->
+    <div class="modal-backdrop" id="order-modal" hidden>
+        <div class="modal-card modal-lg">
+            <div class="modal-head">
+                <h3>Order <span id="modal-order-id"></span></h3>
+                <button class="icon-btn" data-close="order-modal" aria-label="Close">&times;</button>
             </div>
             <div class="modal-body" id="order-modal-body"></div>
         </div>
     </div>
 
-    <!-- Product Modal -->
-    <div id="product-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="product-modal-title">Add Product</h2>
-                <button class="modal-close" onclick="closeProductModal()">&times;</button>
-            </div>
-            <form id="product-form" class="modal-body">
-                <input type="hidden" id="product-id">
-                <div class="form-group">
-                    <label>Name *</label>
-                    <input type="text" id="product-name" required>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="product-description" rows="3"></textarea>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Category *</label>
-                        <select id="product-category" required>
-                            <option value="regular">Regular Collection</option>
-                            <option value="special">Special Edition</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Base Price (₹) *</label>
-                        <input type="number" id="product-base-price" min="1" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Stock Quantity</label>
-                    <input type="number" id="product-stock" min="0" value="0">
-                </div>
-                <div class="form-group">
-                    <label>Sizes & Prices (JSON) *</label>
-                    <textarea id="product-sizes" rows="4" required placeholder='{"small": 499, "medium": 749, "large": 1380}'></textarea>
-                    <small>Format: {"size_name": price_in_rupees}</small>
-                </div>
-                <div class="form-group">
-                    <label>Image URLs (one per line)</label>
-                    <textarea id="product-images" rows="3" placeholder="Pictures/image1.jpg&#10;Pictures/image2.jpg"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="product-active" checked> Active
-                    </label>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Product</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Status Update Modal -->
-    <div id="status-modal" class="modal" style="display: none;">
-        <div class="modal-content modal-small">
-            <div class="modal-header">
-                <h2>Update Order Status</h2>
-                <button class="modal-close" onclick="closeStatusModal()">&times;</button>
+    <!-- Status modal -->
+    <div class="modal-backdrop" id="status-modal" hidden>
+        <div class="modal-card modal-sm">
+            <div class="modal-head">
+                <h3>Update status</h3>
+                <button class="icon-btn" data-close="status-modal" aria-label="Close">&times;</button>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="status-order-id">
-                <div class="form-group">
-                    <label>New Status *</label>
-                    <select id="new-status" required>
+                <div class="field">
+                    <label for="new-status">New status</label>
+                    <select id="new-status" class="input">
                         <option value="pending">Pending</option>
                         <option value="confirmed">Confirmed</option>
                         <option value="processing">Processing</option>
@@ -378,17 +284,19 @@
                         <option value="rejected">Rejected</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Note (optional)</label>
-                    <textarea id="status-note" rows="3" placeholder="Reason for status change..."></textarea>
+                <div class="field">
+                    <label for="status-note">Note (optional)</label>
+                    <textarea id="status-note" class="input" rows="3" placeholder="Reason / message for customer"></textarea>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeStatusModal()">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="submitStatusUpdate()">Update Status</button>
+                    <button class="btn btn-ghost" data-close="status-modal">Cancel</button>
+                    <button class="btn btn-gold" id="submit-status">Save Status</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <script src="admin.js"></script>
 </body>

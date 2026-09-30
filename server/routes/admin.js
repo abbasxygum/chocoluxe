@@ -1,6 +1,6 @@
 const express = require('express');
-const { get, all, run } = require('./db');
-const { authMiddleware, adminMiddleware } = require('./middleware/auth');
+const { get, all, run } = require('../db');
+const { authMiddleware, adminMiddleware } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -8,14 +8,14 @@ router.use(authMiddleware, adminMiddleware);
 
 router.get('/dashboard', (req, res) => {
   const totalOrders = get('SELECT COUNT(*) as count FROM orders');
-  const pendingOrders = get('SELECT COUNT(*) as count FROM orders WHERE order_status = "pending"');
-  const confirmedOrders = get('SELECT COUNT(*) as count FROM orders WHERE order_status = "confirmed"');
-  const processingOrders = get('SELECT COUNT(*) as count FROM orders WHERE order_status = "processing"');
-  const shippedOrders = get('SELECT COUNT(*) as count FROM orders WHERE order_status = "shipped"');
-  const deliveredOrders = get('SELECT COUNT(*) as count FROM orders WHERE order_status = "delivered"');
-  const cancelledOrders = get('SELECT COUNT(*) as count FROM orders WHERE order_status IN ("cancelled", "rejected")');
-  const totalRevenue = get('SELECT COALESCE(SUM(total_amount), 0) as total FROM orders WHERE payment_status = "paid"');
-  const totalUsers = get('SELECT COUNT(*) as count FROM users WHERE role = "customer"');
+  const pendingOrders = get("SELECT COUNT(*) as count FROM orders WHERE order_status = 'pending'");
+  const confirmedOrders = get("SELECT COUNT(*) as count FROM orders WHERE order_status = 'confirmed'");
+  const processingOrders = get("SELECT COUNT(*) as count FROM orders WHERE order_status = 'processing'");
+  const shippedOrders = get("SELECT COUNT(*) as count FROM orders WHERE order_status = 'shipped'");
+  const deliveredOrders = get("SELECT COUNT(*) as count FROM orders WHERE order_status = 'delivered'");
+  const cancelledOrders = get("SELECT COUNT(*) as count FROM orders WHERE order_status IN ('cancelled', 'rejected')");
+  const totalRevenue = get("SELECT COALESCE(SUM(total_amount), 0) as total FROM orders WHERE payment_status = 'paid'");
+  const totalUsers = get("SELECT COUNT(*) as count FROM users WHERE role = 'customer'");
   const totalProducts = get('SELECT COUNT(*) as count FROM products WHERE is_active = 1');
   
   const recentOrders = all(
@@ -46,6 +46,55 @@ router.get('/dashboard', (req, res) => {
     recentOrders: recentOrders.map(o => ({ ...o, items: JSON.parse(o.items) })),
     pendingPayments
   });
+});
+
+router.get('/messages', (req, res) => {
+  const orders = all(
+    `SELECT order_id, customer_name, customer_email, customer_phone,
+            special_instructions, items, created_at
+     FROM orders
+     WHERE special_instructions != '' OR items LIKE '%"message"%'
+     ORDER BY created_at DESC
+     LIMIT 500`
+  );
+
+  const messages = [];
+  for (const o of orders) {
+    let parsedItems = [];
+    try { parsedItems = JSON.parse(o.items || '[]'); } catch (e) { /* skip */ }
+
+    for (const item of parsedItems) {
+      if (item.message && String(item.message).trim()) {
+        messages.push({
+          type: 'item',
+          orderId: o.order_id,
+          customerName: o.customer_name,
+          customerEmail: o.customer_email,
+          customerPhone: o.customer_phone,
+          product: item.name,
+          quantity: item.quantity,
+          message: String(item.message).trim(),
+          createdAt: o.created_at
+        });
+      }
+    }
+
+    if (o.special_instructions && String(o.special_instructions).trim()) {
+      messages.push({
+        type: 'note',
+        orderId: o.order_id,
+        customerName: o.customer_name,
+        customerEmail: o.customer_email,
+        customerPhone: o.customer_phone,
+        product: null,
+        quantity: null,
+        message: String(o.special_instructions).trim(),
+        createdAt: o.created_at
+      });
+    }
+  }
+
+  res.json({ messages });
 });
 
 router.get('/orders', (req, res) => {
@@ -236,7 +285,7 @@ router.get('/users', (req, res) => {
   const { page = 1, limit = 20, search } = req.query;
   const offset = (page - 1) * limit;
   
-  let sql = 'SELECT id, email, name, role, phone, address, city, pincode, created_at FROM users WHERE role = "customer"';
+  let sql = "SELECT id, email, name, role, phone, address, city, pincode, created_at FROM users WHERE role = 'customer'";
   const params = [];
   
   if (search) {
@@ -250,7 +299,7 @@ router.get('/users', (req, res) => {
   
   const users = all(sql, params);
   
-  let countSql = 'SELECT COUNT(*) as total FROM users WHERE role = "customer"';
+  let countSql = "SELECT COUNT(*) as total FROM users WHERE role = 'customer'";
   const countParams = [];
   if (search) {
     countSql += ' AND (name LIKE ? OR email LIKE ? OR phone LIKE ?)';
@@ -288,7 +337,7 @@ router.get('/analytics', (req, res) => {
     `SELECT 
        json_each.value->>'name' as name,
        SUM(json_each.value->>'quantity') as quantity,
-       SUM(json_each.value->>'totalPrice') as revenue
+       SUM((json_each.value->>'quantity') * (json_each.value->>'price')) as revenue
      FROM orders, json_each(orders.items)
      WHERE orders.created_at >= date('now', ?)
      GROUP BY name

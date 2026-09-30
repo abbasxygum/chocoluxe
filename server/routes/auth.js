@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const { run, get } = require('./db');
-const { generateToken, authMiddleware, optionalAuth } = require('./middleware/auth');
+const { run, get } = require('../db');
+const { generateToken, authMiddleware, optionalAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -82,6 +82,41 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+router.post('/admin/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+    
+    const user = get('SELECT * FROM users WHERE email = ?', [email]);
+    
+    if (!user || user.role !== 'admin') {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+    
+    const isValid = await bcrypt.compare(password, user.password_hash);
+    
+    if (!isValid) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+    
+    const token = generateToken(user);
+    
+    const { password_hash, ...userWithoutPassword } = user;
+    
+    res.json({
+      message: 'Admin login successful',
+      user: userWithoutPassword,
+      token
+    });
+  } catch (err) {
+    console.error('Admin login error:', err);
+    res.status(500).json({ error: 'Admin login failed' });
   }
 });
 

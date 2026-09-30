@@ -1,7 +1,6 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
-const { get, all, run, transaction } = require('./db');
-const { authMiddleware, optionalAuth } = require('./middleware/auth');
+const { get, all, run } = require('../db');
+const { authMiddleware, optionalAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -15,19 +14,47 @@ function generateOrderId() {
 
 function normalizeItem(item) {
   const name = String(item.name || '').trim();
-  const price = Math.round(Number(item.price));
   const quantity = Math.round(Number(item.quantity));
   const size = String(item.size || '').trim();
   const message = String(item.message || '').trim().slice(0, MAX_MESSAGE_LENGTH);
 
   if (!name) return { error: 'Item name is required' };
-  if (!Number.isFinite(price) || price <= 0) return { error: `Invalid price for ${name}` };
   if (!Number.isFinite(quantity) || quantity < 1 || quantity > MAX_QUANTITY) {
     return { error: `Invalid quantity for ${name}` };
   }
 
-  return { value: { name, price, quantity, size, message } };
+  return { value: { name, quantity, size, message } };
 }
+
+// Prices live in the products table, so the total is always worked out from the
+// database rather than trusting whatever the browser sent.
+function resolvePrice(name, size) {
+  const product = get(
+    'SELECT id, name, sizes, is_active FROM products WHERE name = ? OR id = ? LIMIT 1',
+    [name, Number(name)]
+  );
+
+  if (!product) return { error: `"${name}" is no longer available` };
+  if (!product.is_active) return { error: `"${product.name}" is no longer available` };
+
+  let sizes;
+  try {
+    sizes = JSON.parse(product.sizes);
+  } catch {
+    return { error: `"${product.name}" has invalid size data` };
+  }
+
+  const key = size in sizes ? size : Object.keys(sizes).find((k) => k.toLowerCase() === size.toLowerCase());
+  if (!key) return { error: `Choose a size for ${product.name}` };
+
+  const price = Math.round(Number(sizes[key]));
+  if (!Number.isFinite(price) || price <= 0) {
+    return { error: `"${product.name}" (${key}) has no valid price` };
+  }
+
+  return { value: { id: product.id, name: product.name, price, size: key } };
+}
+
 
 router.post('/', optionalAuth, (req, res) => {
   try {
@@ -39,7 +66,6 @@ router.post('/', optionalAuth, (req, res) => {
       customerAddress,
       customerCity,
       customerPincode,
-      specialInstructions,
       paymentMethod
     } = req.body;
     
@@ -70,9 +96,13 @@ router.post('/', optionalAuth, (req, res) => {
 
     const normalizedItems = [];
     for (const item of items) {
-      const { value, error } = normalizeItem(item);
-      if (error) return res.status(400).json({ error });
-      normalizedItems.push(value);
+      const { value: draft, error: itemError } = normalizeItem(item);
+      if (itemError) return res.status(400).json({ error: itemError });
+
+      const { value: priced, error: priceError } = resolvePrice(draft.name, draft.size);
+      if (priceError) return res.status(400).json({ error: priceError });
+
+      normalizedItems.push({ ...draft, ...priced });
     }
 
     const specialInstructions = String(req.body.specialInstructions || '').trim().slice(0, MAX_NOTE_LENGTH);
